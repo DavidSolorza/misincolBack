@@ -1,0 +1,619 @@
+{
+  "info": {
+    "_postman_id": "c1f7a8b4-8e3d-4c91-9a72-b7e123456789",
+    "name": "Misincol Backend API",
+    "description": "Colección completa de pruebas para la API REST de Misincol (NestJS), con autenticación JWT, equipos, objetivos, actividades y reportes de campo.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sampleTeamId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sampleObjectiveId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sampleActivityId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sampleReportId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "Login Exitoso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "    pm.collectionVariables.set('authToken', res.token);",
+                  "    pm.test('Token JWT generado y guardado', () => {",
+                  "        pm.expect(res.token).to.be.a('string');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@misincol.org\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login Credenciales Inválidas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@misincol.org\",\n  \"password\": \"clave-incorrecta\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Equipos (Teams)",
+      "item": [
+        {
+          "name": "Obtener Todos los Equipos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/teams",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams"]
+            }
+          }
+        },
+        {
+          "name": "Crear Nuevo Equipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id) {",
+                  "    pm.collectionVariables.set('sampleTeamId', res.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Equipo Misionero Frontera Sur\",\n  \"location\": \"Tumaco, Nariño\",\n  \"population\": 215000,\n  \"evangelicaCongregations\": 12,\n  \"evangelicalsCount\": 850,\n  \"leader\": {\n    \"fullName\": \"Pastor Carlos Méndez\",\n    \"contactInfo\": \"carlos.mendez@misincol.org\",\n    \"roleInTeam\": \"Líder de Equipo\"\n  },\n  \"members\": [\n    {\n      \"fullName\": \"Hermana Laura Gómez\",\n      \"contactInfo\": \"3101234567\",\n      \"roleInTeam\": \"Encargada de Discipulado\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/teams",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Equipo por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/teams/{{sampleTeamId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams", "{{sampleTeamId}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Equipo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/teams/{{sampleTeamId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["teams", "{{sampleTeamId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Objetivos (Objectives)",
+      "item": [
+        {
+          "name": "Obtener Objetivos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/objectives",
+              "host": ["{{baseUrl}}"],
+              "path": ["objectives"]
+            }
+          }
+        },
+        {
+          "name": "Crear Objetivo (Autoenumeración)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id) {",
+                  "    pm.collectionVariables.set('sampleObjectiveId', res.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": \"team-default-001\",\n  \"pillarId\": \"evangelizacion\",\n  \"title\": \"Alcanzar 500 familias en el sector norte\",\n  \"description\": \"Realizar jornadas de contacto inicial y consolidación de grupos\",\n  \"essentialArea\": \"Evangelización\",\n  \"level\": \"Nivel 2\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/objectives",
+              "host": ["{{baseUrl}}"],
+              "path": ["objectives"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Objetivo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Alcanzar 600 familias en el sector norte (Actualizado)\",\n  \"level\": \"Nivel 3\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/objectives/{{sampleObjectiveId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["objectives", "{{sampleObjectiveId}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Objetivo (Recalcula Posiciones)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/objectives/{{sampleObjectiveId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["objectives", "{{sampleObjectiveId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Actividades (Activities)",
+      "item": [
+        {
+          "name": "Obtener Actividades",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/activities",
+              "host": ["{{baseUrl}}"],
+              "path": ["activities"]
+            }
+          }
+        },
+        {
+          "name": "Crear Actividad (Valida Etapa y Calcula Presupuesto)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id) {",
+                  "    pm.collectionVariables.set('sampleActivityId', res.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectiveId\": \"obj-123\",\n  \"description\": \"Taller de evangelización y discipulado inicial\",\n  \"essentialArea\": \"Evangelización\",\n  \"stage\": \"Respuesta al evangelio\",\n  \"areaLevel\": \"Nivel 2\",\n  \"unitBudget\": 150000,\n  \"timesPerYear\": 4,\n  \"frequency\": \"Trimestral\",\n  \"startDate\": \"2026-03-01\",\n  \"endDate\": \"2026-11-30\",\n  \"responsible\": \"Juan Pérez\",\n  \"shortTermGoal\": \"Capacitar 20 líderes\",\n  \"mediumTermGoal\": \"Abrir 5 puntos de predicación\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/activities",
+              "host": ["{{baseUrl}}"],
+              "path": ["activities"]
+            }
+          }
+        },
+        {
+          "name": "Crear Actividad con Etapa Inválida (Debe Fallar 400)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objectiveId\": \"obj-123\",\n  \"description\": \"Actividad con inconsistencia\",\n  \"essentialArea\": \"Investigación\",\n  \"stage\": \"Respuesta al evangelio\",\n  \"unitBudget\": 100000,\n  \"timesPerYear\": 1,\n  \"startDate\": \"2026-01-01\",\n  \"endDate\": \"2026-12-31\",\n  \"responsible\": \"Pedro Gómez\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/activities",
+              "host": ["{{baseUrl}}"],
+              "path": ["activities"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Actividad",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"En Proceso\",\n  \"unitBudget\": 180000,\n  \"timesPerYear\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/activities/{{sampleActivityId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["activities", "{{sampleActivityId}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Actividad",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/activities/{{sampleActivityId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["activities", "{{sampleActivityId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Reportes de Campo (Field Reports)",
+      "item": [
+        {
+          "name": "Obtener Reportes de Campo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports"]
+            }
+          }
+        },
+        {
+          "name": "Crear Reporte de Campo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id) {",
+                  "    pm.collectionVariables.set('sampleReportId', res.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": \"team-default-001\",\n  \"year\": 2026,\n  \"firstTimeContacts\": 120,\n  \"interestedPeople\": 45,\n  \"heardGospel\": 95,\n  \"seekingGodPeople\": 30,\n  \"gospelResponseOpportunities\": 15,\n  \"believersCount\": 12,\n  \"baptizedCount\": 8,\n  \"activeBibleStudies\": 6,\n  \"personalMentorships\": 10,\n  \"newGroupsMeetingInYear\": 3,\n  \"churchPerspectiveGroups\": 2,\n  \"finalChurchesCount\": 1,\n  \"churchGenerations\": 1,\n  \"ministerialTrainingCount\": 15\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reports",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports"]
+            }
+          }
+        },
+        {
+          "name": "Exportar Reporte a Formato Excel",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/export/excel/team-default-001",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "export", "excel", "team-default-001"]
+            }
+          }
+        },
+        {
+          "name": "Exportar Reporte a Formato PDF",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/export/pdf/team-default-001",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "export", "pdf", "team-default-001"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
