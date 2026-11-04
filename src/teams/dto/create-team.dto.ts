@@ -43,3 +43,4 @@ export class AddTeamMemberDto {
   @IsNotEmpty()
   roleInTeam: string;
 }
+

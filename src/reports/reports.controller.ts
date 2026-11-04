@@ -54,3 +54,4 @@ export class ReportsController {
     return this.reportsService.delete(id);
   }
 }
+

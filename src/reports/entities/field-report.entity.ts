@@ -19,3 +19,4 @@ export class FieldReport {
   createdAt: string;
   updatedAt: string;
 }
+

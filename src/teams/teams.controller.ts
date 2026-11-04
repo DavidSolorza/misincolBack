@@ -31,3 +31,4 @@ export class TeamsController {
     return { success: this.teamsService.removeMember(teamId, memberId) };
   }
 }
+

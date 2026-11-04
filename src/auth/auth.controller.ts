@@ -12,3 +12,4 @@ export class AuthController {
     return this.authService.validateAndLogin(dto);
   }
 }
+

@@ -76,3 +76,4 @@ export class CreateFieldReportDto {
 }
 
 export class UpdateFieldReportDto extends CreateFieldReportDto {}
+

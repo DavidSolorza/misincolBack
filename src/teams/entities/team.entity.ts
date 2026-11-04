@@ -17,3 +17,4 @@ export class Team {
   leaderPhone?: string;
   members: TeamMember[] = [];
 }
+

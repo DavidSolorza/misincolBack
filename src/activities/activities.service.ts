@@ -71,3 +71,4 @@ export class ActivitiesService {
     return { success: true, message: `Actividad ${id} eliminada exitosamente` };
   }
 }
+

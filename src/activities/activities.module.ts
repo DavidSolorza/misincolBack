@@ -10,3 +10,4 @@ import { ActivitiesService } from './activities.service';
   exports: [ActivitiesService],
 })
 export class ActivitiesModule {}
+

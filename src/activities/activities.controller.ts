@@ -44,3 +44,4 @@ export class ActivitiesController {
     return this.activitiesService.delete(id);
   }
 }
+

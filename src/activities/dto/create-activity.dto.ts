@@ -130,3 +130,4 @@ export class UpdateActivityDto {
   @IsOptional()
   longTermGoal?: string;
 }
+

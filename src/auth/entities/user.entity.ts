@@ -5,3 +5,4 @@ export class User {
   role: 'admin' | 'team';
   teamId?: string;
 }
+
