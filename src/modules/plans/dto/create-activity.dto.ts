@@ -2,7 +2,7 @@ import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-v
 import { IsStageConsistentWithArea } from '../../../common/validators/is-stage-consistent.validator';
 
 export class CreateActivityDto {
-  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General', 'Auto-cuidado'])
+  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'Auto-cuidado'])
   @IsNotEmpty()
   essentialArea: string;
 

@@ -8,6 +8,7 @@ export class Objective {
   essentialArea: string;
   stage: string;
   level?: string;
+  shortTermGoal?: string;
   mediumTermGoal?: string;
   longTermGoal?: string;
   totalBudget?: number;

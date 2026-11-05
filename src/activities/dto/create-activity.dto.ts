@@ -14,7 +14,7 @@ export class CreateActivityDto {
   @IsOptional()
   status?: 'Pendiente' | 'En Proceso' | 'Completado';
 
-  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General', 'Auto-cuidado'])
+  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'Auto-cuidado'])
   @IsNotEmpty()
   essentialArea: string;
 

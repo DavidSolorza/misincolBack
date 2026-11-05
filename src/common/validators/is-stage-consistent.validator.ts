@@ -42,13 +42,6 @@ export const STAGES_BY_AREA_MAP: Record<string, string[]> = {
     'ADN Multiplicador',
     'Salida progresiva',
   ],
-  General: [
-    'Auto-cuidado',
-    'Auto Cuidado del Misionero',
-    'ADN Multiplicador',
-    'Salida progresiva',
-    'General',
-  ],
 };
 
 @ValidatorConstraint({ name: 'isStageConsistentWithArea', async: false })

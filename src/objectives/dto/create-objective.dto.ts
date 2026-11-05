@@ -18,7 +18,7 @@ export class CreateObjectiveDto {
   @IsNotEmpty({ message: 'La descripción del objetivo es obligatoria' })
   description: string;
 
-  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General', 'Auto-cuidado'])
+  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'Auto-cuidado'])
   @IsNotEmpty()
   essentialArea: string;
 
@@ -30,6 +30,10 @@ export class CreateObjectiveDto {
   @IsString()
   @IsOptional()
   level?: string;
+
+  @IsString()
+  @IsOptional()
+  shortTermGoal?: string;
 
   @IsString()
   @IsOptional()
