@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -30,13 +31,15 @@ export class ActivitiesController {
   }
 
   @Post()
-  create(@Body() dto: CreateActivityDto): Activity {
-    return this.activitiesService.create(dto);
+  create(@Body() dto: CreateActivityDto, @Req() req: any): Activity {
+    const creator = req.user?.email || 'Líder';
+    return this.activitiesService.create(dto, creator);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateActivityDto): Activity {
-    return this.activitiesService.update(id, dto);
+  update(@Param('id') id: string, @Body() dto: UpdateActivityDto, @Req() req: any): Activity {
+    const updater = req.user?.email || 'Líder';
+    return this.activitiesService.update(id, dto, updater);
   }
 
   @Delete(':id')
@@ -44,4 +47,3 @@ export class ActivitiesController {
     return this.activitiesService.delete(id);
   }
 }
-

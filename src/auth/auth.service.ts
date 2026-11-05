@@ -1,21 +1,14 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  private readonly defaultUsers: User[] = [
-    { id: 'usr-admin-1', email: 'director@misincol.org', passwordHash: 'misincol2026', role: 'admin' },
-    { id: 'usr-admin-2', email: 'admin@misincol.org', passwordHash: 'password123', role: 'admin' },
-    { id: 'usr-team-wayuu', email: 'wayuu@misincol.org', passwordHash: 'wayuu2026', role: 'team', teamId: 'team-wayuu' },
-    { id: 'usr-team-pastos', email: 'pastos@misincol.org', passwordHash: 'pastos2026', role: 'team', teamId: 'team-pastos' },
-    { id: 'usr-team-nasa', email: 'nasa@misincol.org', passwordHash: 'nasa2026', role: 'team', teamId: 'team-nasa' },
-    { id: 'usr-team-embera', email: 'embera@misincol.org', passwordHash: 'embera2026', role: 'team', teamId: 'team-embera' },
-    { id: 'usr-team-arhuaco', email: 'arhuaco@misincol.org', passwordHash: 'arhuaco2026', role: 'team', teamId: 'team-arhuaco' },
-  ];
-
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
+  ) {}
 
   async validateAndLogin(dto: LoginDto) {
     const rawIdentifier = dto.identifier || dto.email;
@@ -28,20 +21,20 @@ export class AuthService {
     const cleanId = rawIdentifier.trim().toLowerCase();
     const cleanSecret = rawPassword.trim();
 
-    const user = this.defaultUsers.find((u) => {
-      return (
-        u.email.toLowerCase() === cleanId ||
-        (u.teamId && u.teamId.toLowerCase() === cleanId) ||
-        (cleanId === 'admin' && u.role === 'admin') ||
-        (cleanId === 'director' && u.role === 'admin')
-      );
-    });
+    let user = this.usersService.findByEmail(cleanId);
+    if (!user) {
+      const all = this.usersService.findAll();
+      const matched = all.find((u) => u.teamId && u.teamId.toLowerCase() === cleanId);
+      if (matched) user = this.usersService.findById(matched.id);
+    }
 
-    const validAdminSecrets = ['misincol2026', 'password123', 'admin2026', '210910624Dj'];
-    const isValid = user
-      ? (user.role === 'admin' && validAdminSecrets.includes(cleanSecret)) || user.passwordHash === cleanSecret
-      : false;
+    if (!user) {
+      if (cleanId === 'admin' || cleanId === 'director') {
+        user = this.usersService.findByEmail('admin@misincol.org') || this.usersService.findByEmail('director@misincol.org');
+      }
+    }
 
+    const isValid = user ? this.usersService.verifyPassword(user, cleanSecret) : false;
     if (!user || !isValid) {
       throw new UnauthorizedException('Credenciales incorrectas. Verifique el usuario y el PIN de acceso.');
     }
@@ -56,6 +49,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
+        fullName: user.fullName,
         role: user.role,
         teamId: user.teamId,
       },

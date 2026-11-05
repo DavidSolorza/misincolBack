@@ -17,5 +17,6 @@ export class Activity {
   shortTermGoal?: string;
   mediumTermGoal?: string;
   longTermGoal?: string;
+  createdBy?: string;
+  updatedBy?: string;
 }
-

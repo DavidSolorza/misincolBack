@@ -17,6 +17,8 @@ export class ObjectivesService {
       stage: 'Contacto primeros oyentes',
       mediumTermGoal: '10 comunidades cartografiadas',
       longTermGoal: 'Censo de clanes y autoridades tradicionales',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
     {
       id: 'obj-wayuu-inv-2',
@@ -28,6 +30,8 @@ export class ObjectivesService {
       essentialArea: 'Investigación',
       level: 'Nivel 2',
       stage: 'Contacto primeros oyentes',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
   ];
 
@@ -39,48 +43,63 @@ export class ObjectivesService {
       .sort((a, b) => a.dynamicPosition - b.dynamicPosition);
   }
 
-  create(dto: CreateObjectiveDto): Objective {
+  create(dto: CreateObjectiveDto, createdBy?: string): Objective {
     const existing = this.findByTeamAndPillar(dto.teamId, dto.pillarId);
     if (existing.length >= 4) {
       throw new BadRequestException('Regla Ministerial: Toda fase admite como máximo 4 objetivos estratégicos.');
     }
 
     const nextPosition = existing.length + 1;
+    const now = new Date().toISOString();
     const newObjective: Objective = {
       id: `obj-${Date.now()}`,
+      teamId: dto.teamId,
+      pillarId: dto.pillarId.toLowerCase(),
       dynamicPosition: nextPosition,
-      ...dto,
+      title: dto.title,
+      description: dto.description,
+      essentialArea: dto.essentialArea,
+      level: dto.level,
+      stage: dto.stage,
+      mediumTermGoal: dto.mediumTermGoal,
+      longTermGoal: dto.longTermGoal,
+      totalBudget: dto.totalBudget || 0,
+      createdAt: now,
+      updatedAt: now,
+      createdBy: createdBy || 'Líder',
+      updatedBy: createdBy || 'Líder',
     };
+
     this.objectives.push(newObjective);
     return newObjective;
   }
 
-  update(id: string, dto: UpdateObjectiveDto): Objective {
+  update(id: string, dto: UpdateObjectiveDto, updatedBy?: string): Objective {
     const obj = this.objectives.find((o) => o.id === id);
-    if (!obj) throw new NotFoundException(`Objetivo '${id}' no encontrado.`);
-
-    Object.assign(obj, dto);
+    if (!obj) throw new NotFoundException(`Objetivo ${id} no encontrado`);
+    Object.assign(obj, dto, { updatedAt: new Date().toISOString(), updatedBy });
     return obj;
   }
 
-  delete(id: string): { deletedId: string; reordered: Objective[] } {
+  delete(id: string): { success: boolean; message: string } {
     const target = this.objectives.find((o) => o.id === id);
-    if (!target) throw new NotFoundException(`Objetivo '${id}' no encontrado.`);
+    if (!target) throw new NotFoundException(`Objetivo ${id} no encontrado`);
 
-    const siblings = this.findByTeamAndPillar(target.teamId, target.pillarId);
-    if (siblings.length <= 1) {
-      throw new BadRequestException('No se puede eliminar: Toda fase ministerial debe contar con al menos un objetivo.');
-    }
-
+    const { teamId, pillarId } = target;
     this.objectives = this.objectives.filter((o) => o.id !== id);
+    this.recalculatePositions(teamId, pillarId);
 
-    // Autoenumeración dinámica secuencial
-    const remaining = this.findByTeamAndPillar(target.teamId, target.pillarId);
-    remaining.forEach((o, index) => {
-      o.dynamicPosition = index + 1;
+    return { success: true, message: `Objetivo ${id} eliminado y numeración recalculada.` };
+  }
+
+  private recalculatePositions(teamId: string, pillarId: string): void {
+    const remaining = this.objectives
+      .filter((o) => o.teamId === teamId && o.pillarId.toLowerCase() === pillarId.toLowerCase())
+      .sort((a, b) => a.dynamicPosition - b.dynamicPosition);
+
+    remaining.forEach((obj, idx) => {
+      obj.dynamicPosition = idx + 1;
+      obj.updatedAt = new Date().toISOString();
     });
-
-    return { deletedId: id, reordered: remaining };
   }
 }
-

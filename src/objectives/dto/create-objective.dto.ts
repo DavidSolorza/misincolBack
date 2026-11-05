@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { IsStageConsistentWithArea } from '../../common/validators/is-stage-consistent.validator';
 
 export class CreateObjectiveDto {
@@ -38,6 +38,11 @@ export class CreateObjectiveDto {
   @IsString()
   @IsOptional()
   longTermGoal?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  totalBudget?: number;
 }
 
 export class UpdateObjectiveDto {
@@ -69,5 +74,9 @@ export class UpdateObjectiveDto {
   @IsString()
   @IsOptional()
   longTermGoal?: string;
-}
 
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  totalBudget?: number;
+}

@@ -15,6 +15,7 @@ export class Team {
   evangelicalsCount: number;
   leader?: string;
   leaderPhone?: string;
-  members: TeamMember[] = [];
+  members: TeamMember[];
+  createdBy?: string;
+  updatedBy?: string;
 }
-

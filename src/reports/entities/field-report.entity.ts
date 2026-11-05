@@ -18,5 +18,6 @@ export class FieldReport {
   ministerialTrainingCount: number;
   createdAt: string;
   updatedAt: string;
+  createdBy?: string;
+  updatedBy?: string;
 }
-

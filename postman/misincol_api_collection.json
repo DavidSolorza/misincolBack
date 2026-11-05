@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "c1f7a8b4-8e3d-4c91-9a72-b7e123456789",
-    "name": "Misincol Backend API",
-    "description": "Colección completa de pruebas para la API REST de Misincol (NestJS), con autenticación JWT, equipos, objetivos, actividades y reportes de campo.",
+    "name": "Misincol Backend API (RBAC & LockWorkflow)",
+    "description": "Colección completa de pruebas para la API REST de Misincol (NestJS), con autenticación RBAC, gestión de usuarios, sellado de planes (LockWorkflow), solicitudes de cambio, cron de notificaciones, objetivos, actividades y reportes.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -18,7 +18,7 @@
     },
     {
       "key": "sampleTeamId",
-      "value": "",
+      "value": "team-wayuu",
       "type": "string"
     },
     {
@@ -32,7 +32,7 @@
       "type": "string"
     },
     {
-      "key": "sampleReportId",
+      "key": "sampleChangeRequestId",
       "value": "",
       "type": "string"
     }
@@ -42,7 +42,7 @@
       "name": "1. Auth",
       "item": [
         {
-          "name": "Login Exitoso",
+          "name": "Login Nacional Exitoso",
           "event": [
             {
               "listen": "test",
@@ -62,559 +62,166 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@misincol.org\",\n  \"password\": \"password123\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
-            }
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
           }
         },
         {
-          "name": "Login Credenciales Inválidas",
+          "name": "Login Líder Exitoso",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@misincol.org\",\n  \"password\": \"clave-incorrecta\"\n}"
+              "raw": "{\n  \"email\": \"wayuu@misincol.org\",\n  \"password\": \"wayuu2026\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
-            }
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
           }
         }
       ]
     },
     {
-      "name": "2. Equipos (Teams)",
+      "name": "2. Usuarios (Users - RBAC)",
       "item": [
         {
-          "name": "Obtener Todos los Equipos",
+          "name": "Crear Usuario (Exclusivo ROLE_NACIONAL)",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"lider.arhuaco@misincol.org\",\n  \"fullName\": \"Pastor Danilo Villafañe\",\n  \"password\": \"arhuaco2026\",\n  \"role\": \"ROLE_LIDER\",\n  \"teamId\": \"team-arhuaco\"\n}"
             },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/teams",
-              "host": ["{{baseUrl}}"],
-              "path": ["teams"]
-            }
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] }
           }
         },
         {
-          "name": "Crear Nuevo Equipo",
+          "name": "Listar Usuarios (ROLE_NACIONAL)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Flujo de Sellado y Solicitudes de Cambio (LockWorkflow)",
+      "item": [
+        {
+          "name": "Consultar Estado de Sellado del Plan",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/teams/team-wayuu/plan-status?year=2026", "host": ["{{baseUrl}}"], "path": ["teams", "team-wayuu", "plan-status"], "query": [{ "key": "year", "value": "2026" }] }
+          }
+        },
+        {
+          "name": "Sellar Plan como Terminado",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/teams/team-wayuu/finish-plan?year=2026", "host": ["{{baseUrl}}"], "path": ["teams", "team-wayuu", "finish-plan"], "query": [{ "key": "year", "value": "2026" }] }
+          }
+        },
+        {
+          "name": "Crear Solicitud de Cambio en Plan Sellado",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "const res = pm.response.json();",
-                  "if (res.id) {",
-                  "    pm.collectionVariables.set('sampleTeamId', res.id);",
-                  "}"
+                  "if (res.id) { pm.collectionVariables.set('sampleChangeRequestId', res.id); }"
                 ],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Equipo Misionero Frontera Sur\",\n  \"location\": \"Tumaco, Nariño\",\n  \"population\": 215000,\n  \"evangelicaCongregations\": 12,\n  \"evangelicalsCount\": 850,\n  \"leader\": {\n    \"fullName\": \"Pastor Carlos Méndez\",\n    \"contactInfo\": \"carlos.mendez@misincol.org\",\n    \"roleInTeam\": \"Líder de Equipo\"\n  },\n  \"members\": [\n    {\n      \"fullName\": \"Hermana Laura Gómez\",\n      \"contactInfo\": \"3101234567\",\n      \"roleInTeam\": \"Encargada de Discipulado\"\n    }\n  ]\n}"
+              "raw": "{\n  \"teamId\": \"team-wayuu\",\n  \"entityType\": \"ACTIVITY\",\n  \"action\": \"UPDATE\",\n  \"proposedData\": {\n    \"description\": \"Ajuste logístico de jornada médica y pastoral\",\n    \"unitBudget\": 400000\n  },\n  \"reason\": \"Crecimiento de asistentes y necesidad de suministros adicionales.\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/teams",
-              "host": ["{{baseUrl}}"],
-              "path": ["teams"]
-            }
+            "url": { "raw": "{{baseUrl}}/change-requests", "host": ["{{baseUrl}}"], "path": ["change-requests"] }
           }
         },
         {
-          "name": "Obtener Equipo por ID",
+          "name": "Listar Solicitudes de Cambio (ROLE_NACIONAL)",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/teams/{{sampleTeamId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["teams", "{{sampleTeamId}}"]
-            }
+            "url": { "raw": "{{baseUrl}}/change-requests?status=PENDING", "host": ["{{baseUrl}}"], "path": ["change-requests"], "query": [{ "key": "status", "value": "PENDING" }] }
           }
         },
         {
-          "name": "Eliminar Equipo",
+          "name": "Aprobar Solicitud de Cambio (ROLE_NACIONAL)",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
+            "method": "POST",
             "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/teams/{{sampleTeamId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["teams", "{{sampleTeamId}}"]
-            }
+            "url": { "raw": "{{baseUrl}}/change-requests/{{sampleChangeRequestId}}/approve", "host": ["{{baseUrl}}"], "path": ["change-requests", "{{sampleChangeRequestId}}", "approve"] }
           }
         }
       ]
     },
     {
-      "name": "3. Objetivos (Objectives)",
+      "name": "4. Notificaciones y Auditoría Automática (Cron)",
       "item": [
         {
-          "name": "Obtener Objetivos",
+          "name": "Consultar Notificaciones del Usuario",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/objectives",
-              "host": ["{{baseUrl}}"],
-              "path": ["objectives"]
-            }
+            "url": { "raw": "{{baseUrl}}/notifications", "host": ["{{baseUrl}}"], "path": ["notifications"] }
           }
         },
         {
-          "name": "Crear Objetivo (Autoenumeración)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const res = pm.response.json();",
-                  "if (res.id) {",
-                  "    pm.collectionVariables.set('sampleObjectiveId', res.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "Disparar Auditoría de Fechas Límite Manualmente",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"teamId\": \"team-default-001\",\n  \"pillarId\": \"evangelizacion\",\n  \"title\": \"Alcanzar 500 familias en el sector norte\",\n  \"description\": \"Realizar jornadas de contacto inicial y consolidación de grupos\",\n  \"essentialArea\": \"Evangelización\",\n  \"level\": \"Nivel 2\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/objectives",
-              "host": ["{{baseUrl}}"],
-              "path": ["objectives"]
-            }
-          }
-        },
-        {
-          "name": "Actualizar Objetivo",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Alcanzar 600 familias en el sector norte (Actualizado)\",\n  \"level\": \"Nivel 3\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/objectives/{{sampleObjectiveId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["objectives", "{{sampleObjectiveId}}"]
-            }
-          }
-        },
-        {
-          "name": "Eliminar Objetivo (Recalcula Posiciones)",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
             "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/objectives/{{sampleObjectiveId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["objectives", "{{sampleObjectiveId}}"]
-            }
+            "url": { "raw": "{{baseUrl}}/notifications/trigger-audit", "host": ["{{baseUrl}}"], "path": ["notifications", "trigger-audit"] }
           }
         }
       ]
     },
     {
-      "name": "4. Actividades (Activities)",
+      "name": "5. Reportes y Respaldos Masivos",
       "item": [
         {
-          "name": "Obtener Actividades",
+          "name": "Respaldo Masivo en JSON",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/activities",
-              "host": ["{{baseUrl}}"],
-              "path": ["activities"]
-            }
+            "url": { "raw": "{{baseUrl}}/reports/backup/json", "host": ["{{baseUrl}}"], "path": ["reports", "backup", "json"] }
           }
         },
         {
-          "name": "Crear Actividad (Valida Etapa y Calcula Presupuesto)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const res = pm.response.json();",
-                  "if (res.id) {",
-                  "    pm.collectionVariables.set('sampleActivityId', res.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "Respaldo Masivo en Excel",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"objectiveId\": \"obj-123\",\n  \"description\": \"Taller de evangelización y discipulado inicial\",\n  \"essentialArea\": \"Evangelización\",\n  \"stage\": \"Respuesta al evangelio\",\n  \"areaLevel\": \"Nivel 2\",\n  \"unitBudget\": 150000,\n  \"timesPerYear\": 4,\n  \"frequency\": \"Trimestral\",\n  \"startDate\": \"2026-03-01\",\n  \"endDate\": \"2026-11-30\",\n  \"responsible\": \"Juan Pérez\",\n  \"shortTermGoal\": \"Capacitar 20 líderes\",\n  \"mediumTermGoal\": \"Abrir 5 puntos de predicación\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/activities",
-              "host": ["{{baseUrl}}"],
-              "path": ["activities"]
-            }
-          }
-        },
-        {
-          "name": "Crear Actividad con Etapa Inválida (Debe Fallar 400)",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"objectiveId\": \"obj-123\",\n  \"description\": \"Actividad con inconsistencia\",\n  \"essentialArea\": \"Investigación\",\n  \"stage\": \"Respuesta al evangelio\",\n  \"unitBudget\": 100000,\n  \"timesPerYear\": 1,\n  \"startDate\": \"2026-01-01\",\n  \"endDate\": \"2026-12-31\",\n  \"responsible\": \"Pedro Gómez\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/activities",
-              "host": ["{{baseUrl}}"],
-              "path": ["activities"]
-            }
-          }
-        },
-        {
-          "name": "Actualizar Actividad",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"En Proceso\",\n  \"unitBudget\": 180000,\n  \"timesPerYear\": 4\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/activities/{{sampleActivityId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["activities", "{{sampleActivityId}}"]
-            }
-          }
-        },
-        {
-          "name": "Eliminar Actividad",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/activities/{{sampleActivityId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["activities", "{{sampleActivityId}}"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "5. Reportes de Campo (Field Reports)",
-      "item": [
-        {
-          "name": "Obtener Reportes de Campo",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }] },
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/reports",
-              "host": ["{{baseUrl}}"],
-              "path": ["reports"]
-            }
-          }
-        },
-        {
-          "name": "Crear Reporte de Campo",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const res = pm.response.json();",
-                  "if (res.id) {",
-                  "    pm.collectionVariables.set('sampleReportId', res.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"teamId\": \"team-default-001\",\n  \"year\": 2026,\n  \"firstTimeContacts\": 120,\n  \"interestedPeople\": 45,\n  \"heardGospel\": 95,\n  \"seekingGodPeople\": 30,\n  \"gospelResponseOpportunities\": 15,\n  \"believersCount\": 12,\n  \"baptizedCount\": 8,\n  \"activeBibleStudies\": 6,\n  \"personalMentorships\": 10,\n  \"newGroupsMeetingInYear\": 3,\n  \"churchPerspectiveGroups\": 2,\n  \"finalChurchesCount\": 1,\n  \"churchGenerations\": 1,\n  \"ministerialTrainingCount\": 15\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/reports",
-              "host": ["{{baseUrl}}"],
-              "path": ["reports"]
-            }
-          }
-        },
-        {
-          "name": "Exportar Reporte a Formato Excel",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/reports/export/excel/team-default-001",
-              "host": ["{{baseUrl}}"],
-              "path": ["reports", "export", "excel", "team-default-001"]
-            }
-          }
-        },
-        {
-          "name": "Exportar Reporte a Formato PDF",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{authToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/reports/export/pdf/team-default-001",
-              "host": ["{{baseUrl}}"],
-              "path": ["reports", "export", "pdf", "team-default-001"]
-            }
+            "url": { "raw": "{{baseUrl}}/reports/backup/excel", "host": ["{{baseUrl}}"], "path": ["reports", "backup", "excel"] }
           }
         }
       ]
     }
   ]
 }
-

@@ -7,11 +7,11 @@ import { CreateFieldReportDto, UpdateFieldReportDto } from './dto/create-field-r
 export class ReportsService {
   private reports: FieldReport[] = [];
 
-  findAll(teamId?: string): FieldReport[] {
-    if (teamId) {
-      return this.reports.filter((rep) => rep.teamId === teamId);
-    }
-    return [...this.reports];
+  findAll(teamId?: string, year?: number): FieldReport[] {
+    let result = [...this.reports];
+    if (teamId) result = result.filter((rep) => rep.teamId === teamId);
+    if (year) result = result.filter((rep) => rep.year === Number(year));
+    return result;
   }
 
   findOne(id: string): FieldReport {
@@ -27,7 +27,7 @@ export class ReportsService {
     const newReport: FieldReport = {
       id: randomUUID(),
       teamId: dto.teamId,
-      year: dto.year,
+      year: Number(dto.year),
       firstTimeContacts: dto.firstTimeContacts || 0,
       interestedPeople: dto.interestedPeople || 0,
       heardGospel: dto.heardGospel || 0,
@@ -65,26 +65,46 @@ export class ReportsService {
     return { success: true, message: `Informe ${id} eliminado` };
   }
 
-  exportToExcel(teamId: string) {
-    const reports = this.findAll(teamId);
+  exportBackupJson() {
+    return {
+      backupType: 'MASS_BACKUP_JSON',
+      generatedAt: new Date().toISOString(),
+      totalRecords: this.reports.length,
+      data: this.reports,
+    };
+  }
+
+  exportBackupExcel() {
+    return {
+      backupType: 'MASS_BACKUP_EXCEL',
+      generatedAt: new Date().toISOString(),
+      filename: `respaldo_general_pdm_${Date.now()}.xlsx`,
+      totalRecords: this.reports.length,
+      data: this.reports,
+    };
+  }
+
+  exportToExcel(teamId: string, year?: number) {
+    const reports = this.findAll(teamId, year);
     return {
       format: 'excel',
       teamId,
+      year: year || 'Todos',
       generatedAt: new Date().toISOString(),
       data: reports,
       filename: `informe_campo_${teamId}_${Date.now()}.xlsx`,
     };
   }
 
-  exportToPdf(teamId: string) {
-    const reports = this.findAll(teamId);
+  exportToPdf(teamId: string, year?: number) {
+    const reports = this.findAll(teamId, year);
     return {
       format: 'pdf',
       teamId,
+      year: year || 'Todos',
       generatedAt: new Date().toISOString(),
       data: reports,
       filename: `informe_campo_${teamId}_${Date.now()}.pdf`,
     };
   }
 }
-

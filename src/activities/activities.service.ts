@@ -22,7 +22,7 @@ export class ActivitiesService {
     return activity;
   }
 
-  create(dto: CreateActivityDto): Activity {
+  create(dto: CreateActivityDto, createdBy?: string): Activity {
     const unitBudget = Number(dto.unitBudget) || 0;
     const timesPerYear = Number(dto.timesPerYear) || 1;
     const totalBudget = unitBudget * timesPerYear;
@@ -46,19 +46,26 @@ export class ActivitiesService {
       shortTermGoal: dto.shortTermGoal,
       mediumTermGoal: dto.mediumTermGoal,
       longTermGoal: dto.longTermGoal,
+      createdBy: createdBy || 'Líder',
+      updatedBy: createdBy || 'Líder',
     };
 
     this.activities.push(newActivity);
     return newActivity;
   }
 
-  update(id: string, dto: UpdateActivityDto): Activity {
+  update(id: string, dto: UpdateActivityDto, updatedBy?: string): Activity {
     const activity = this.findOne(id);
     const unitBudget = dto.unitBudget !== undefined ? Number(dto.unitBudget) : activity.unitBudget;
     const timesPerYear = dto.timesPerYear !== undefined ? Number(dto.timesPerYear) : activity.timesPerYear;
     const totalBudget = unitBudget * timesPerYear;
 
-    Object.assign(activity, dto, { unitBudget, timesPerYear, totalBudget });
+    Object.assign(activity, dto, {
+      unitBudget,
+      timesPerYear,
+      totalBudget,
+      updatedBy: updatedBy || activity.updatedBy,
+    });
     return activity;
   }
 
@@ -71,4 +78,3 @@ export class ActivitiesService {
     return { success: true, message: `Actividad ${id} eliminada exitosamente` };
   }
 }
-

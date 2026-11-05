@@ -1,0 +1,4 @@
+export enum UserRole {
+  ROLE_NACIONAL = 'ROLE_NACIONAL',
+  ROLE_LIDER = 'ROLE_LIDER',
+}
