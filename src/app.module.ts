@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ActivitiesModule } from './activities/activities.module';
+import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { PlansModule } from './modules/plans/plans.module';
 import { NotificationsModule } from './notifications/notifications.module';
@@ -21,5 +22,6 @@ import { WorkflowModule } from './workflow/workflow.module';
     NotificationsModule,
     PlansModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
