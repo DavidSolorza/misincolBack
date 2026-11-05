@@ -14,7 +14,7 @@ export class CreateActivityDto {
   @IsOptional()
   status?: 'Pendiente' | 'En Proceso' | 'Completado';
 
-  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General'])
+  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General', 'Auto-cuidado'])
   @IsNotEmpty()
   essentialArea: string;
 
@@ -23,7 +23,7 @@ export class CreateActivityDto {
   @IsStageConsistentWithArea()
   stage: string;
 
-  @IsEnum(['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'])
+  @IsString()
   @IsOptional()
   areaLevel?: string;
 
@@ -75,7 +75,7 @@ export class UpdateActivityDto {
   @IsOptional()
   status?: 'Pendiente' | 'En Proceso' | 'Completado';
 
-  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General'])
+  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General', 'Auto-cuidado'])
   @IsOptional()
   essentialArea?: string;
 
@@ -84,7 +84,7 @@ export class UpdateActivityDto {
   @IsStageConsistentWithArea()
   stage?: string;
 
-  @IsEnum(['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'])
+  @IsString()
   @IsOptional()
   areaLevel?: string;
 
@@ -130,4 +130,3 @@ export class UpdateActivityDto {
   @IsOptional()
   longTermGoal?: string;
 }
-

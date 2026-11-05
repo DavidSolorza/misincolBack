@@ -18,18 +18,18 @@ export class CreateObjectiveDto {
   @IsNotEmpty({ message: 'La descripción del objetivo es obligatoria' })
   description: string;
 
-  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General'])
+  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General', 'Auto-cuidado'])
   @IsNotEmpty()
   essentialArea: string;
 
-  @IsEnum(['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'])
-  @IsOptional()
-  level?: string;
+  @IsString()
+  @IsNotEmpty({ message: 'La etapa asociada al pilar es obligatoria' })
+  @IsStageConsistentWithArea()
+  stage: string;
 
   @IsString()
   @IsOptional()
-  @IsStageConsistentWithArea()
-  stage?: string;
+  level?: string;
 
   @IsString()
   @IsOptional()
@@ -54,18 +54,18 @@ export class UpdateObjectiveDto {
   @IsOptional()
   description?: string;
 
-  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General'])
+  @IsEnum(['Investigación', 'Encarnación', 'Evangelización', 'Entrenamiento', 'Autocuidado', 'General', 'Auto-cuidado'])
   @IsOptional()
   essentialArea?: string;
-
-  @IsEnum(['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'])
-  @IsOptional()
-  level?: string;
 
   @IsString()
   @IsOptional()
   @IsStageConsistentWithArea()
   stage?: string;
+
+  @IsString()
+  @IsOptional()
+  level?: string;
 
   @IsString()
   @IsOptional()
