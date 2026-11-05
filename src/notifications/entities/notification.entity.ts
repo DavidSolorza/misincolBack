@@ -9,3 +9,4 @@ export class NotificationEntity {
   status: 'SENT' | 'PENDING';
   createdAt: string;
 }
+

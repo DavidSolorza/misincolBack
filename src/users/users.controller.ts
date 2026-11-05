@@ -39,3 +39,4 @@ export class UsersController {
     return user;
   }
 }
+

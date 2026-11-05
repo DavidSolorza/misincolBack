@@ -22,3 +22,4 @@ export class NotificationsController {
     return this.notificationsService.runAudit();
   }
 }
+

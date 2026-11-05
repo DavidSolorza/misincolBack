@@ -13,3 +13,4 @@ export class ChangeRequest {
   resolvedAt?: string;
   rejectionReason?: string;
 }
+

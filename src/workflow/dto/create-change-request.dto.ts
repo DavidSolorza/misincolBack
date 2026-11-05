@@ -31,3 +31,4 @@ export class RejectChangeRequestDto {
   @IsNotEmpty({ message: 'El motivo de rechazo es obligatorio' })
   rejectionReason: string;
 }
+

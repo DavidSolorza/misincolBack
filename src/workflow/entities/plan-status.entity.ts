@@ -7,3 +7,4 @@ export class PlanStatus {
   lockedBy?: string;
   updatedAt: string;
 }
+
