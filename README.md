@@ -34,6 +34,11 @@ backend/src/
 │   └── security.module.ts              # Módulo exportable de seguridad
 ├── teams/                              # Supervisión de los 6 equipos misioneros territoriales
 ├── users/                              # Usuarios, roles y control de acceso
+│   ├── dto/                            # CreateUserDto, UpdateUserRoleDto
+│   ├── entities/                       # User Entity
+│   ├── users.controller.ts             # Endpoints REST (GET, POST, PATCH /users/:id/role)
+│   ├── users.service.ts                # Gestión de identidades, hash y reasignación de roles
+│   └── users.module.ts                 # Módulo de usuarios
 ├── workflow/                           # Gobernanza: solicitudes de cambio y bloqueo de planes
 ├── app.module.ts                       # Módulo raíz de la aplicación (< 40 líneas)
 └── main.ts                             # Bootstrap de NestJS con ValidationPipe global
@@ -68,10 +73,11 @@ if (existing.length >= 4) {
   - `ROLE_NACIONAL` / `admin` (Director Nacional): Control total sobre misiones, gobernanza, matriz de roles, auditoría sensible e historiales de ingreso.
   - `ROLE_LIDER` / `team` (Líder de Equipo): Gestión operativa de su PDM asignado, notas de campo, solicitud de cambios y asignación de tareas.
   - `ROLE_USUARIO` (Usuario de Equipo): Miembro de campo con acceso a consulta y ejecución de tareas de su misión.
-- **Endpoints de Seguridad (`SecurityController`)**:
+- **Endpoints de Seguridad (`SecurityController` & `UsersController`)**:
   - `GET /security/matrix`: Consulta la matriz activa cruzando roles y permisos del sistema.
   - `PUT /security/matrix`: Actualización protegida de la matriz de permisos (requiere `@Roles(UserRole.ROLE_NACIONAL)`).
   - `GET /security/roles`: Listado de roles reconocidos con sus metadatos y descripciones.
+  - `PATCH /users/:id/role`: Asignación y cambio de rol a colaboradores del sistema (requiere `@Roles(UserRole.ROLE_NACIONAL)`).
 
 ---
 

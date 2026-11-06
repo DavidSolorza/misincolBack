@@ -110,6 +110,15 @@ export class UsersService {
     return safeUser;
   }
 
+  updateRole(id: string, newRole: UserRole, updatedBy?: string): Omit<User, 'passwordHash'> {
+    const user = this.findById(id);
+    user.role = newRole;
+    user.updatedAt = new Date().toISOString();
+    if (updatedBy) user.updatedBy = updatedBy;
+    const { passwordHash, ...safeUser } = user;
+    return safeUser;
+  }
+
   verifyPassword(user: User, plainPassword: string): boolean {
     const hashed = this.hashPassword(plainPassword);
     return user.passwordHash === hashed;

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -13,6 +14,7 @@ import { UserRole } from '../common/enums/user-role.enum';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -31,6 +33,13 @@ export class UsersController {
   @Roles(UserRole.ROLE_NACIONAL)
   findAll(@Query('role') role?: UserRole, @Query('teamId') teamId?: string) {
     return this.usersService.findAll(role, teamId);
+  }
+
+  @Patch(':id/role')
+  @Roles(UserRole.ROLE_NACIONAL)
+  updateRole(@Param('id') id: string, @Body() dto: UpdateUserRoleDto, @Req() req: any) {
+    const updaterEmail = req.user?.email || 'ROLE_NACIONAL';
+    return this.usersService.updateRole(id, dto.role, updaterEmail);
   }
 
   @Get(':id')
