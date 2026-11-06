@@ -26,6 +26,12 @@ backend/src/
 │   ├── objectives.controller.ts        # Endpoints REST protegidos
 │   └── objectives.service.ts           # Regla ministerial: máx. 4 objetivos y renumeración
 ├── reports/                            # Informes ejecutivos y consolidado nacional
+├── security/                           # Gestor de roles y matriz de permisos
+│   ├── dto/                            # UpdateSecurityMatrixDto
+│   ├── entities/                       # SecurityMatrix, SystemRole, SystemPermission
+│   ├── security.controller.ts          # Endpoints REST protegidos (GET, PUT /security/matrix)
+│   ├── security.service.ts             # Lógica de matriz de permisos por defecto y validación
+│   └── security.module.ts              # Módulo exportable de seguridad
 ├── teams/                              # Supervisión de los 6 equipos misioneros territoriales
 ├── users/                              # Usuarios, roles y control de acceso
 ├── workflow/                           # Gobernanza: solicitudes de cambio y bloqueo de planes
@@ -57,9 +63,15 @@ if (existing.length >= 4) {
   - **Entrenamiento**: Capacitación de líderes, Talleres bíblicos.
   - **Autocuidado**: Salud física y emocional, Retiros espirituales.
 
-### 2.3. Control de Acceso Basado en Roles (RBAC)
-- **Rol `admin` (Coordinador de Equipos)**: Puede gestionar integrantes, supervisar todos los equipos, aprobar o rechazar solicitudes de cambio y emitir informes nacionales.
-- **Rol `team` (Líder Territorial)**: Acceso restringido únicamente al PDM de su misión asignada (`teamId`). No puede agregar ni eliminar integrantes de su equipo.
+### 2.3. Control de Acceso Basado en Roles (RBAC) y Matriz de Permisos
+- **Roles del Sistema (`UserRole`)**:
+  - `ROLE_NACIONAL` / `admin` (Director Nacional): Control total sobre misiones, gobernanza, matriz de roles, auditoría sensible e historiales de ingreso.
+  - `ROLE_LIDER` / `team` (Líder de Equipo): Gestión operativa de su PDM asignado, notas de campo, solicitud de cambios y asignación de tareas.
+  - `ROLE_USUARIO` (Usuario de Equipo): Miembro de campo con acceso a consulta y ejecución de tareas de su misión.
+- **Endpoints de Seguridad (`SecurityController`)**:
+  - `GET /security/matrix`: Consulta la matriz activa cruzando roles y permisos del sistema.
+  - `PUT /security/matrix`: Actualización protegida de la matriz de permisos (requiere `@Roles(UserRole.ROLE_NACIONAL)`).
+  - `GET /security/roles`: Listado de roles reconocidos con sus metadatos y descripciones.
 
 ---
 

@@ -9,6 +9,7 @@ import { ReportsModule } from './reports/reports.module';
 import { TeamsModule } from './teams/teams.module';
 import { UsersModule } from './users/users.module';
 import { WorkflowModule } from './workflow/workflow.module';
+import { SecurityModule } from './security/security.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WorkflowModule } from './workflow/workflow.module';
     WorkflowModule,
     NotificationsModule,
     PlansModule,
+    SecurityModule,
   ],
   controllers: [AppController],
 })
