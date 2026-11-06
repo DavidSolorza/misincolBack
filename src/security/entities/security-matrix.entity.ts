@@ -20,3 +20,4 @@ export interface RoleConfigItem {
   displayName: string;
   description: string;
 }
+

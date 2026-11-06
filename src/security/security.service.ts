@@ -79,3 +79,4 @@ export class SecurityService {
     return !!this.matrix[role]?.[permission];
   }
 }
+

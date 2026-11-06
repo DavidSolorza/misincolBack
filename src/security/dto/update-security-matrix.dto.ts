@@ -6,3 +6,4 @@ export class UpdateSecurityMatrixDto {
   @IsNotEmpty()
   matrix: SecurityMatrix;
 }
+
