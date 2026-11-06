@@ -1,37 +1,80 @@
-# Misincol Backend API (NestJS)
+# 🛡️ MISINCOL Backend API | Documentación de Arquitectura y Servicios
 
-Backend REST API modular desarrollado con **NestJS** para la plataforma **Misincol (Plan de Desarrollo Ministerial)**.
-
----
-
-## 🚀 Requisitos
-- Node.js >= 20.x
-- npm >= 10.x
+API REST empresarial desarrollada en **NestJS** para la plataforma **MISINCOL (Plan de Desarrollo Ministerial)**. Sigue una arquitectura modular orientada al negocio (**Vertical Slicing**), tipado estricto con TypeScript, validación de contratos vía DTOs (`class-validator`), control de concurrencia optimista y cumplimiento estricto del límite de **150 líneas por archivo**.
 
 ---
 
-## 📦 Instalación
-```bash
-npm install
+## 🏛️ 1. Módulos y Estructura del Sistema
+
+```text
+backend/src/
+├── activities/                         # Gestión de actividades territoriales del PDM
+│   ├── dto/                            # CreateActivityDto, UpdateActivityDto (presupuesto, metas, contingencias)
+│   ├── entities/                       # Activity Entity
+│   ├── activities.controller.ts        # Endpoints REST: GET, POST, PUT, DELETE (< 60 líneas)
+│   └── activities.service.ts           # Lógica de negocio y cálculo presupuestal
+├── auth/                               # Autenticación JWT y control de acceso
+│   ├── auth.controller.ts              # Endpoints de login de administradores y equipos
+│   └── auth.service.ts                 # Emisión y verificación de tokens JWT
+├── common/                             # Utilidades compartidas y validadores
+│   ├── guards/                         # JwtAuthGuard, RolesGuard
+│   ├── interceptors/                   # TransformInterceptor, LoggingInterceptor
+│   └── validators/                     # IsStageConsistentWithArea (validador de etapas por pilar)
+├── objectives/                         # Objetivos estratégicos (Límite estricto de 4)
+│   ├── dto/                            # CreateObjectiveDto, UpdateObjectiveDto
+│   ├── entities/                       # Objective Entity (dynamicPosition 1..4)
+│   ├── objectives.controller.ts        # Endpoints REST protegidos
+│   └── objectives.service.ts           # Regla ministerial: máx. 4 objetivos y renumeración
+├── reports/                            # Informes ejecutivos y consolidado nacional
+├── teams/                              # Supervisión de los 6 equipos misioneros territoriales
+├── users/                              # Usuarios, roles y control de acceso
+├── workflow/                           # Gobernanza: solicitudes de cambio y bloqueo de planes
+├── app.module.ts                       # Módulo raíz de la aplicación (< 40 líneas)
+└── main.ts                             # Bootstrap de NestJS con ValidationPipe global
 ```
 
 ---
 
-## 🛠️ Ejecución y Desarrollo
+## 🧭 2. Reglas de Negocio Clave
+
+### 2.1. Límite Estricto de 4 Objetivos por Fase
+En `ObjectivesService.create()`:
+```typescript
+const existing = this.findByTeamAndPillar(dto.teamId, dto.pillarId);
+if (existing.length >= 4) {
+  throw new BadRequestException('Regla Ministerial: Toda fase admite como máximo 4 objetivos estratégicos.');
+}
+```
+- Cada fase admite entre **1 y 4 objetivos estratégicos**.
+- Si se intenta registrar un 5to objetivo, la API responde con código HTTP `400 Bad Request`.
+- Al eliminar un objetivo (`delete()`), las posiciones restantes se reordenan automáticamente (1..3).
+
+### 2.2. Validación de Coherencia de Etapas según el Pilar Oficial
+- El validador `@IsStageConsistentWithArea()` en `CreateObjectiveDto` e `CreateActivityDto` garantiza que la etapa pertenezca estrictamente al pilar seleccionado:
+  - **Investigación**: Contacto primeros oyentes, Inmersión cultural, etc.
+  - **Encarnación**: Inmersión Comunitaria, Servicio Práctico, Vínculos Afectivos.
+  - **Evangelización**: Proclamación, Grupos de discipulado, etc.
+  - **Entrenamiento**: Capacitación de líderes, Talleres bíblicos.
+  - **Autocuidado**: Salud física y emocional, Retiros espirituales.
+
+### 2.3. Control de Acceso Basado en Roles (RBAC)
+- **Rol `admin` (Coordinador de Equipos)**: Puede gestionar integrantes, supervisar todos los equipos, aprobar o rechazar solicitudes de cambio y emitir informes nacionales.
+- **Rol `team` (Líder Territorial)**: Acceso restringido únicamente al PDM de su misión asignada (`teamId`). No puede agregar ni eliminar integrantes de su equipo.
+
+---
+
+## 💻 3. Comandos de Ejecución
+
 ```bash
-# Desarrollo con recarga automática
+# Instalación de dependencias
+npm install
+
+# Servidor de desarrollo con recarga en caliente
 npm run start:dev
 
 # Compilación de producción
 npm run build
 
-# Ejecución en producción
+# Ejecución en modo producción
 npm run start:prod
 ```
-
----
-
-## 🏛️ Estructura de Módulos (Vertical Slicing)
-- `src/common/validators/`: Validadores de dominio con `class-validator` (validación de coherencia entre Pilar y Etapa).
-- `src/modules/plans/`: Módulo de gestión de fases ministeriales, objetivos dinámicos y actividades territoriales.
-- `src/modules/teams/`: Supervisión de equipos y métricas consolidadas.
