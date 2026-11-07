@@ -93,6 +93,16 @@ if (existing.length >= 4) {
   - `GET /audit/changes`: Trazabilidad detallada con `fieldModified`, `previousValue` y `newValue`.
   - `GET /audit/logins`: Bitácora exclusiva de inicios de sesión con IP y usuario.
 
+### 2.6. Gestión y Cuadre de Presupuestos Territoriales (`TeamsController` & `TeamsService`)
+- Sincronización oficial de los 6 equipos con el Excel maestro (*PDM 2026 Pastos Vr1.xlsx*).
+- Presupuestos base asignados (ej. Pastos: $11,210,000 COP, total nacional: $94,610,000 COP).
+- Calculadora reactiva (`team-budget.calculator.ts`) con porcentaje de ejecución exacto:
+  $$\text{budgetPercentage} = \text{round}\left(\frac{\text{executedBudget}}{\text{totalBudget}} \times 100\right)$$
+- Endpoints especializados:
+  - `GET /teams/summary/kpis`: KPIs nacionales consolidados de presupuesto y salud operativa.
+  - `GET /teams/:id/budget-summary`: Conciliación presupuestal y desglose por pilares.
+- Soporte para desglose mensual de 12 meses (`monthlyBudget`) en actividades.
+
 ---
 
 ## 💻 3. Comandos de Ejecución
