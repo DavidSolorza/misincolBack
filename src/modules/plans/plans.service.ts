@@ -6,10 +6,16 @@ export class PlansService {
   private readonly activities: (CreateActivityDto & { id: string; totalBudget: number })[] = [];
 
   createActivity(dto: CreateActivityDto) {
+    let totalBudget = dto.unitBudget * dto.timesPerYear;
+    if (dto.monthlyBudget && Array.isArray(dto.monthlyBudget) && dto.monthlyBudget.length > 0) {
+      const sum = dto.monthlyBudget.reduce((a, b) => a + (Number(b) || 0), 0);
+      if (sum > 0) totalBudget = sum;
+    }
+
     const newActivity = {
       ...dto,
       id: `act-${Date.now()}`,
-      totalBudget: dto.unitBudget * dto.timesPerYear,
+      totalBudget,
     };
     this.activities.push(newActivity);
     return newActivity;

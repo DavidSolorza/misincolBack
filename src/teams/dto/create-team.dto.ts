@@ -28,6 +28,40 @@ export class CreateTeamDto {
   @IsString()
   @IsOptional()
   leaderPhone?: string;
+
+  @IsString()
+  @IsOptional()
+  ethnicity?: string;
+
+  @IsString()
+  @IsOptional()
+  region?: string;
+
+  @IsString()
+  @IsOptional()
+  department?: string;
+
+  @IsString()
+  @IsOptional()
+  currentPhaseId?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  totalBudget?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  executedBudget?: number;
+
+  @IsString()
+  @IsOptional()
+  themeColor?: string;
+
+  @IsString()
+  @IsOptional()
+  healthStatus?: 'Optimo' | 'Atención' | 'Crítico';
 }
 
 export class AddTeamMemberDto {

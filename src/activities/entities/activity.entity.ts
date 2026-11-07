@@ -8,6 +8,7 @@ export class Activity {
   areaLevel?: string;
   unitBudget: number;
   totalBudget: number;
+  monthlyBudget?: number[];
   frequency: string;
   timesPerYear: number;
   startDate: string;

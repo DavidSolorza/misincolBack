@@ -1,71 +1,60 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Team, TeamMember } from './entities/team.entity';
 import { CreateTeamDto, AddTeamMemberDto } from './dto/create-team.dto';
+import { INITIAL_TEAMS_DATA } from './helpers/initial-teams.data';
+import {
+  calculateExecutionPercentage,
+  calculateNationalKPIs,
+  buildTeamBudgetSummary,
+  NationalBudgetKPIs,
+  TeamBudgetSummary,
+} from './helpers/team-budget.calculator';
 
 @Injectable()
 export class TeamsService {
-  private readonly teams: Team[] = [
-    {
-      id: 'team-wayuu',
-      name: 'Misión Alta Guajira (Wayuu)',
-      location: 'Uribia y Nazaret, La Guajira',
-      population: 380400,
-      evangelicaCongregations: 14,
-      evangelicalsCount: 1250,
-      leader: 'Pr. Carlos Pushaina',
-      leaderPhone: '+57 312 456 7890',
-      members: [
-        { id: 'tm-1', teamId: 'team-wayuu', fullName: 'Carlos Pushaina', contactInfo: '+57 312 456 7890', roleInTeam: 'Líder Pastoral' },
-        { id: 'tm-2', teamId: 'team-wayuu', fullName: 'Marta Epieyu', contactInfo: '+57 315 889 0011', roleInTeam: 'Traducción y Niñez' },
-      ],
-      createdBy: 'SYSTEM',
-    },
-    {
-      id: 'team-pastos',
-      name: 'Misión Gran Cumbal (Pastos)',
-      location: 'Cumbal y Chiles, Nariño',
-      population: 162000,
-      evangelicaCongregations: 9,
-      evangelicalsCount: 820,
-      leader: 'Pr. Segundo Ceballos',
-      leaderPhone: '+57 311 234 5678',
-      members: [
-        { id: 'tm-3', teamId: 'team-pastos', fullName: 'Segundo Ceballos', contactInfo: '+57 311 234 5678', roleInTeam: 'Coordinador General' },
-      ],
-      createdBy: 'SYSTEM',
-    },
-    {
-      id: 'team-nasa',
-      name: 'Misión Tierradentro (Nasa)',
-      location: 'Belalcázar e Inzá, Cauca',
-      population: 243000,
-      evangelicaCongregations: 22,
-      evangelicalsCount: 3100,
-      leader: 'Pr. Manuel Yonda',
-      leaderPhone: '+57 314 901 2345',
-      members: [],
-      createdBy: 'SYSTEM',
-    },
-  ];
+  private readonly teams: Team[] = [...INITIAL_TEAMS_DATA];
 
-  findAll(): Team[] { return this.teams; }
+  findAll(): Team[] {
+    return this.teams.map((t) => ({
+      ...t,
+      budgetPercentage: calculateExecutionPercentage(t.executedBudget, t.totalBudget),
+    }));
+  }
 
   findOne(id: string): Team {
     const found = this.teams.find((t) => t.id === id);
     if (!found) throw new NotFoundException(`Equipo con ID '${id}' no encontrado.`);
+    found.budgetPercentage = calculateExecutionPercentage(found.executedBudget, found.totalBudget);
     return found;
   }
 
   create(dto: CreateTeamDto, createdBy?: string): Team {
+    const totalBudget = Number(dto.totalBudget) || 0;
+    const executedBudget = Number(dto.executedBudget) || 0;
     const newTeam: Team = {
       id: `team-${Date.now()}`,
       ...dto,
+      totalBudget,
+      executedBudget,
+      budgetPercentage: calculateExecutionPercentage(executedBudget, totalBudget),
+      healthStatus: dto.healthStatus || 'Optimo',
+      currentPhaseId: dto.currentPhaseId || 'investigacion',
+      pillarBudgets: { investigacion: 0, encarnacion: 0, evangelizacion: 0, entrenamiento: 0, autocuidado: 0 },
       members: [],
       createdBy: createdBy || 'ROLE_NACIONAL',
       updatedBy: createdBy || 'ROLE_NACIONAL',
     };
     this.teams.push(newTeam);
     return newTeam;
+  }
+
+  update(id: string, updates: Partial<Team>, updatedBy?: string): Team {
+    const team = this.findOne(id);
+    Object.assign(team, updates, {
+      updatedBy: updatedBy || team.updatedBy,
+    });
+    team.budgetPercentage = calculateExecutionPercentage(team.executedBudget, team.totalBudget);
+    return team;
   }
 
   addMember(teamId: string, memberDto: AddTeamMemberDto): TeamMember {
@@ -84,5 +73,14 @@ export class TeamsService {
     if (index === -1) throw new NotFoundException(`Equipo con ID '${id}' no encontrado.`);
     this.teams.splice(index, 1);
     return { success: true, message: `Equipo '${id}' eliminado correctamente.` };
+  }
+
+  getNationalKPIs(): NationalBudgetKPIs {
+    return calculateNationalKPIs(this.teams);
+  }
+
+  getTeamBudgetSummary(teamId: string): TeamBudgetSummary {
+    const team = this.findOne(teamId);
+    return buildTeamBudgetSummary(team);
   }
 }

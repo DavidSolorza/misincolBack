@@ -17,9 +17,19 @@ export class TeamsController {
     return this.teamsService.findAll();
   }
 
+  @Get('summary/kpis')
+  getNationalKPIs() {
+    return this.teamsService.getNationalKPIs();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Team {
     return this.teamsService.findOne(id);
+  }
+
+  @Get(':id/budget-summary')
+  getTeamBudgetSummary(@Param('id') id: string) {
+    return this.teamsService.getTeamBudgetSummary(id);
   }
 
   @Post()

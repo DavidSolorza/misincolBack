@@ -28,7 +28,7 @@ export class ActivitiesService {
     }
     const unitBudget = Number(dto.unitBudget) || 0;
     const timesPerYear = Number(dto.timesPerYear) || 1;
-    const totalBudget = unitBudget * timesPerYear;
+    const totalBudget = this.calcBudget(unitBudget, timesPerYear, dto.monthlyBudget);
 
     const newActivity: Activity = {
       id: randomUUID(),
@@ -41,6 +41,7 @@ export class ActivitiesService {
       unitBudget,
       timesPerYear,
       totalBudget,
+      monthlyBudget: dto.monthlyBudget,
       frequency: dto.frequency || 'Anual',
       startDate: dto.startDate,
       endDate: dto.endDate,
@@ -64,15 +65,25 @@ export class ActivitiesService {
     const activity = this.findOne(id);
     const unitBudget = dto.unitBudget !== undefined ? Number(dto.unitBudget) : activity.unitBudget;
     const timesPerYear = dto.timesPerYear !== undefined ? Number(dto.timesPerYear) : activity.timesPerYear;
-    const totalBudget = unitBudget * timesPerYear;
+    const monthlyBudget = dto.monthlyBudget !== undefined ? dto.monthlyBudget : activity.monthlyBudget;
+    const totalBudget = this.calcBudget(unitBudget, timesPerYear, monthlyBudget);
 
     Object.assign(activity, dto, {
       unitBudget,
       timesPerYear,
       totalBudget,
+      monthlyBudget,
       updatedBy: updatedBy || activity.updatedBy,
     });
     return activity;
+  }
+
+  private calcBudget(unit: number, times: number, monthly?: number[]): number {
+    if (monthly && Array.isArray(monthly) && monthly.length > 0) {
+      const sum = monthly.reduce((acc, m) => acc + (Number(m) || 0), 0);
+      if (sum > 0) return sum;
+    }
+    return unit * times;
   }
 
   updateStatus(id: string, status: string, userRole?: string, userName?: string): Activity {

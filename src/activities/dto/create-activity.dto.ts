@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { IsStageConsistentWithArea } from '../../common/validators/is-stage-consistent.validator';
 
 export class CreateActivityDto {
@@ -34,6 +34,10 @@ export class CreateActivityDto {
   @IsNumber()
   @Min(1)
   timesPerYear: number;
+
+  @IsArray()
+  @IsOptional()
+  monthlyBudget?: number[];
 
   @IsString()
   @IsOptional()
@@ -97,6 +101,10 @@ export class UpdateActivityDto {
   @Min(1)
   @IsOptional()
   timesPerYear?: number;
+
+  @IsArray()
+  @IsOptional()
+  monthlyBudget?: number[];
 
   @IsString()
   @IsOptional()
