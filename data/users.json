@@ -1,0 +1,58 @@
+[
+  {
+    "id": "usr-admin-1",
+    "email": "director@misincol.org",
+    "name": "Coordinación Nacional",
+    "role": "ROLE_NACIONAL",
+    "teamId": "national"
+  },
+  {
+    "id": "usr-general-1",
+    "email": "general@misincol.org",
+    "name": "Director General",
+    "role": "ROLE_DIRECTOR_GENERAL",
+    "teamId": "national"
+  },
+  {
+    "id": "usr-pastos-1",
+    "email": "pastos@misincol.org",
+    "name": "Hugo Solorza",
+    "role": "ROLE_LIDER",
+    "teamId": "team-pastos"
+  },
+  {
+    "id": "usr-pastos-2",
+    "email": "diana.viera@misincol.org",
+    "name": "Diana Viera",
+    "role": "ROLE_USUARIO",
+    "teamId": "team-pastos"
+  },
+  {
+    "id": "usr-wayuu-1",
+    "email": "wayuu@misincol.org",
+    "name": "Carlos Pushaina",
+    "role": "ROLE_LIDER",
+    "teamId": "team-wayuu"
+  },
+  {
+    "id": "usr-wayuu-2",
+    "email": "marta.epieyu@misincol.org",
+    "name": "Marta Epieyu",
+    "role": "ROLE_USUARIO",
+    "teamId": "team-wayuu"
+  },
+  {
+    "id": "usr-nasa-1",
+    "email": "nasa@misincol.org",
+    "name": "Manuel Yonda",
+    "role": "ROLE_LIDER",
+    "teamId": "team-nasa"
+  },
+  {
+    "id": "usr-nasa-2",
+    "email": "aida.secue@misincol.org",
+    "name": "Aída Secue",
+    "role": "ROLE_USUARIO",
+    "teamId": "team-nasa"
+  }
+]

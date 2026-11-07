@@ -1,0 +1,12 @@
+[
+  {
+    "id": "aud-init-1",
+    "timestamp": "2026-01-01T00:00:00.000Z",
+    "userEmail": "director@misincol.org",
+    "userRole": "ROLE_NACIONAL",
+    "action": "SYSTEM_INIT",
+    "teamId": "national",
+    "details": "Inicialización de base de datos oficial PDM 2026",
+    "ipAddress": "127.0.0.1"
+  }
+]

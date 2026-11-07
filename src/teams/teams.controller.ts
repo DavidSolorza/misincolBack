@@ -22,6 +22,12 @@ export class TeamsController {
     return this.teamsService.getNationalKPIs();
   }
 
+  @Post('reset-database')
+  @Roles(UserRole.ROLE_NACIONAL)
+  resetDatabase(): Promise<Team[]> {
+    return this.teamsService.resetCleanDatabase();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Team {
     return this.teamsService.findOne(id);

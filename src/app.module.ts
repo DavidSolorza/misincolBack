@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JsonDbModule } from './common/db/json-db.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
@@ -14,6 +15,7 @@ import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
+    JsonDbModule,
     AuthModule,
     UsersModule,
     TeamsModule,

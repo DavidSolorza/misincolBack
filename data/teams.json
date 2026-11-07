@@ -1,0 +1,245 @@
+[
+  {
+    "id": "team-pastos",
+    "name": "Misión Pastos - Cumbal",
+    "ethnicity": "Pastos",
+    "region": "Cumbal, Chiles y Panán",
+    "department": "Nariño (Andina/Sur)",
+    "location": "Cumbal y Chiles, Nariño",
+    "population": 162000,
+    "evangelicaCongregations": 9,
+    "evangelicalsCount": 820,
+    "leader": "Pr. Hugo Solorza",
+    "leaderPhone": "+57 315 889 4521",
+    "currentPhaseId": "entrenamiento",
+    "totalBudget": 11210000,
+    "executedBudget": 4200000,
+    "budgetPercentage": 37,
+    "healthStatus": "Optimo",
+    "themeColor": "#2563EB",
+    "accessPin": "pastos2026",
+    "pillarBudgets": {
+      "investigacion": 0,
+      "encarnacion": 0,
+      "evangelizacion": 0,
+      "entrenamiento": 11210000,
+      "autocuidado": 0
+    },
+    "members": [
+      {
+        "id": "tm-p1",
+        "teamId": "team-pastos",
+        "fullName": "Hugo Solorza",
+        "contactInfo": "+57 315 889 4521",
+        "roleInTeam": "Líder Pastoral"
+      },
+      {
+        "id": "tm-p2",
+        "teamId": "team-pastos",
+        "fullName": "Diana Viera",
+        "contactInfo": "+57 311 234 5678",
+        "roleInTeam": "Coordinadora de Niñez"
+      }
+    ],
+    "createdBy": "SYSTEM"
+  },
+  {
+    "id": "team-wayuu",
+    "name": "Misión Wayuu - Alta Guajira",
+    "ethnicity": "Wayuu",
+    "region": "Alta Guajira",
+    "department": "La Guajira",
+    "location": "Uribia y Nazaret, La Guajira",
+    "population": 380400,
+    "evangelicaCongregations": 14,
+    "evangelicalsCount": 1250,
+    "leader": "Pr. Carlos Pushaina",
+    "leaderPhone": "+57 312 456 7890",
+    "currentPhaseId": "investigacion",
+    "totalBudget": 14900000,
+    "executedBudget": 6705000,
+    "budgetPercentage": 45,
+    "healthStatus": "Optimo",
+    "themeColor": "#D97706",
+    "accessPin": "wayuu2026",
+    "pillarBudgets": {
+      "investigacion": 14900000,
+      "encarnacion": 0,
+      "evangelizacion": 0,
+      "entrenamiento": 0,
+      "autocuidado": 0
+    },
+    "members": [
+      {
+        "id": "tm-w1",
+        "teamId": "team-wayuu",
+        "fullName": "Carlos Pushaina",
+        "contactInfo": "+57 312 456 7890",
+        "roleInTeam": "Líder Pastoral"
+      },
+      {
+        "id": "tm-w2",
+        "teamId": "team-wayuu",
+        "fullName": "Marta Epieyu",
+        "contactInfo": "+57 315 889 0011",
+        "roleInTeam": "Traducción y Niñez"
+      }
+    ],
+    "createdBy": "SYSTEM"
+  },
+  {
+    "id": "team-nasa",
+    "name": "Misión Nasa - Tierradentro",
+    "ethnicity": "Nasa",
+    "region": "Tierradentro",
+    "department": "Cauca",
+    "location": "Belalcázar e Inzá, Cauca",
+    "population": 243000,
+    "evangelicaCongregations": 22,
+    "evangelicalsCount": 3100,
+    "leader": "Pr. Manuel Yonda",
+    "leaderPhone": "+57 314 901 2345",
+    "currentPhaseId": "encarnacion",
+    "totalBudget": 18200000,
+    "executedBudget": 12376000,
+    "budgetPercentage": 68,
+    "healthStatus": "Optimo",
+    "themeColor": "#059669",
+    "accessPin": "nasa2026",
+    "pillarBudgets": {
+      "investigacion": 0,
+      "encarnacion": 18200000,
+      "evangelizacion": 0,
+      "entrenamiento": 0,
+      "autocuidado": 0
+    },
+    "members": [
+      {
+        "id": "tm-n1",
+        "teamId": "team-nasa",
+        "fullName": "Manuel Yonda",
+        "contactInfo": "+57 314 901 2345",
+        "roleInTeam": "Coordinador General"
+      },
+      {
+        "id": "tm-n2",
+        "teamId": "team-nasa",
+        "fullName": "Aída Secue",
+        "contactInfo": "+57 318 456 1234",
+        "roleInTeam": "Promotora de Salud"
+      }
+    ],
+    "createdBy": "SYSTEM"
+  },
+  {
+    "id": "team-arhuaco",
+    "name": "Misión Iku - Sierra Nevada",
+    "ethnicity": "Arhuaco (Iku)",
+    "region": "Sierra Nevada",
+    "department": "Cesar / Magdalena",
+    "location": "Nabusímake, Cesar",
+    "population": 34000,
+    "evangelicaCongregations": 5,
+    "evangelicalsCount": 380,
+    "leader": "Pr. Danilo Villafaña",
+    "leaderPhone": "+57 316 778 9900",
+    "currentPhaseId": "investigacion",
+    "totalBudget": 12500000,
+    "executedBudget": 4125000,
+    "budgetPercentage": 33,
+    "healthStatus": "Atención",
+    "themeColor": "#0284C7",
+    "accessPin": "arhuaco2026",
+    "pillarBudgets": {
+      "investigacion": 12500000,
+      "encarnacion": 0,
+      "evangelizacion": 0,
+      "entrenamiento": 0,
+      "autocuidado": 0
+    },
+    "members": [
+      {
+        "id": "tm-a1",
+        "teamId": "team-arhuaco",
+        "fullName": "Danilo Villafaña",
+        "contactInfo": "+57 316 778 9900",
+        "roleInTeam": "Líder"
+      }
+    ],
+    "createdBy": "SYSTEM"
+  },
+  {
+    "id": "team-embera",
+    "name": "Misión Emberá Chamí - Risaralda",
+    "ethnicity": "Emberá Chamí",
+    "region": "Pueblo Rico",
+    "department": "Risaralda",
+    "location": "Pueblo Rico, Risaralda",
+    "population": 29000,
+    "evangelicaCongregations": 8,
+    "evangelicalsCount": 650,
+    "leader": "Pr. Fernando Nariquiaza",
+    "leaderPhone": "+57 310 654 3210",
+    "currentPhaseId": "evangelizacion",
+    "totalBudget": 16800000,
+    "executedBudget": 12600000,
+    "budgetPercentage": 75,
+    "healthStatus": "Optimo",
+    "themeColor": "#7C3AED",
+    "accessPin": "embera2026",
+    "pillarBudgets": {
+      "investigacion": 0,
+      "encarnacion": 0,
+      "evangelizacion": 16800000,
+      "entrenamiento": 0,
+      "autocuidado": 0
+    },
+    "members": [
+      {
+        "id": "tm-e1",
+        "teamId": "team-embera",
+        "fullName": "Fernando Nariquiaza",
+        "contactInfo": "+57 310 654 3210",
+        "roleInTeam": "Líder"
+      }
+    ],
+    "createdBy": "SYSTEM"
+  },
+  {
+    "id": "team-nukak",
+    "name": "Misión Nukak Makú - Selva de Guaviare",
+    "ethnicity": "Nukak Makú",
+    "region": "Resguardo Nukak",
+    "department": "Guaviare",
+    "location": "San José del Guaviare",
+    "population": 1200,
+    "evangelicaCongregations": 2,
+    "evangelicalsCount": 95,
+    "leader": "Pr. Javier Meche",
+    "leaderPhone": "+57 313 112 3344",
+    "currentPhaseId": "encarnacion",
+    "totalBudget": 21000000,
+    "executedBudget": 4200000,
+    "budgetPercentage": 20,
+    "healthStatus": "Atención",
+    "themeColor": "#DC2626",
+    "accessPin": "nukak2026",
+    "pillarBudgets": {
+      "investigacion": 0,
+      "encarnacion": 21000000,
+      "evangelizacion": 0,
+      "entrenamiento": 0,
+      "autocuidado": 0
+    },
+    "members": [
+      {
+        "id": "tm-nu1",
+        "teamId": "team-nukak",
+        "fullName": "Javier Meche",
+        "contactInfo": "+57 313 112 3344",
+        "roleInTeam": "Misionero"
+      }
+    ],
+    "createdBy": "SYSTEM"
+  }
+]

@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit, Optional } from '@nestjs/common';
 import { Team, TeamMember } from './entities/team.entity';
 import { CreateTeamDto, AddTeamMemberDto } from './dto/create-team.dto';
 import { INITIAL_TEAMS_DATA } from './helpers/initial-teams.data';
+import { JsonDbService } from '../common/db/json-db.service';
 import {
   calculateExecutionPercentage,
   calculateNationalKPIs,
@@ -11,8 +12,17 @@ import {
 } from './helpers/team-budget.calculator';
 
 @Injectable()
-export class TeamsService {
-  private readonly teams: Team[] = [...INITIAL_TEAMS_DATA];
+export class TeamsService implements OnModuleInit {
+  private teams: Team[] = [...INITIAL_TEAMS_DATA];
+
+  constructor(@Optional() private readonly jsonDb?: JsonDbService) {}
+
+  async onModuleInit(): Promise<void> {
+    if (this.jsonDb) {
+      const stored = await this.jsonDb.read<Team>('teams', INITIAL_TEAMS_DATA);
+      if (stored && stored.length > 0) this.teams = [...stored];
+    }
+  }
 
   findAll(): Team[] {
     return this.teams.map((t) => ({
@@ -45,26 +55,23 @@ export class TeamsService {
       updatedBy: createdBy || 'ROLE_NACIONAL',
     };
     this.teams.push(newTeam);
+    this.persist();
     return newTeam;
   }
 
   update(id: string, updates: Partial<Team>, updatedBy?: string): Team {
     const team = this.findOne(id);
-    Object.assign(team, updates, {
-      updatedBy: updatedBy || team.updatedBy,
-    });
+    Object.assign(team, updates, { updatedBy: updatedBy || team.updatedBy });
     team.budgetPercentage = calculateExecutionPercentage(team.executedBudget, team.totalBudget);
+    this.persist();
     return team;
   }
 
   addMember(teamId: string, memberDto: AddTeamMemberDto): TeamMember {
     const team = this.findOne(teamId);
-    const newMember: TeamMember = {
-      id: `tm-${Date.now()}`,
-      teamId,
-      ...memberDto,
-    };
+    const newMember: TeamMember = { id: `tm-${Date.now()}`, teamId, ...memberDto };
     team.members.push(newMember);
+    this.persist();
     return newMember;
   }
 
@@ -72,7 +79,18 @@ export class TeamsService {
     const index = this.teams.findIndex((t) => t.id === id);
     if (index === -1) throw new NotFoundException(`Equipo con ID '${id}' no encontrado.`);
     this.teams.splice(index, 1);
+    this.persist();
     return { success: true, message: `Equipo '${id}' eliminado correctamente.` };
+  }
+
+  async resetCleanDatabase(): Promise<Team[]> {
+    this.teams = [...INITIAL_TEAMS_DATA];
+    this.persist();
+    return this.findAll();
+  }
+
+  private persist(): void {
+    if (this.jsonDb) this.jsonDb.write('teams', this.teams).catch(() => {});
   }
 
   getNationalKPIs(): NationalBudgetKPIs {
