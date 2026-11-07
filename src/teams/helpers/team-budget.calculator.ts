@@ -66,3 +66,4 @@ export function buildTeamBudgetSummary(team: Team, activitiesCount = { total: 0,
     completedActivities: activitiesCount.completed,
   };
 }
+

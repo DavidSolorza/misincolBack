@@ -77,3 +77,4 @@ export const TEAMS_ANDINA_DATA: Team[] = [
     createdBy: 'SYSTEM',
   },
 ];
+

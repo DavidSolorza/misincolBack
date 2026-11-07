@@ -74,3 +74,4 @@ export const TEAMS_CARIBE_DATA: Team[] = [
     createdBy: 'SYSTEM',
   },
 ];
+
