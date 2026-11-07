@@ -71,6 +71,7 @@ if (existing.length >= 4) {
 ### 2.3. Control de Acceso Basado en Roles (RBAC) y Matriz de Permisos
 - **Roles del Sistema (`UserRole`)**:
   - `ROLE_NACIONAL` / `admin` (Director Nacional): Control total sobre misiones, gobernanza, matriz de roles, auditoría sensible e historiales de ingreso.
+  - `ROLE_DIRECTOR_GENERAL` / `director` (Director General): Observador pasivo con acceso de consulta a planes, notas y agenda; sin permisos de mutación ni administración.
   - `ROLE_LIDER` / `team` (Líder de Equipo): Gestión operativa de su PDM asignado, notas de campo, solicitud de cambios y asignación de tareas.
   - `ROLE_USUARIO` (Usuario de Equipo): Miembro de campo con acceso a consulta y ejecución de tareas de su misión.
 - **Endpoints de Seguridad (`SecurityController` & `UsersController`)**:

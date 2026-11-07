@@ -44,6 +44,19 @@ export class SecurityService {
       'audit.history.view': true,
       'security.roles.manage': true,
     },
+    [UserRole.ROLE_DIRECTOR_GENERAL]: {
+      'pdm.view': true,
+      'pdm.activities.edit': false,
+      'pdm.activities.delete': false,
+      'pdm.objectives.manage': false,
+      'team.tasks.assign': false,
+      'team.members.manage': false,
+      'notes.manage': true,
+      'reports.team.export': false,
+      'reports.national.view': false,
+      'audit.history.view': false,
+      'security.roles.manage': false,
+    },
   };
 
   getMatrix(): SecurityMatrix {
@@ -66,6 +79,11 @@ export class SecurityService {
         role: UserRole.ROLE_NACIONAL,
         displayName: 'Director nacional',
         description: 'Coordinador general con acceso a supervisión, roles y telemetría nacional.',
+      },
+      {
+        role: UserRole.ROLE_DIRECTOR_GENERAL,
+        displayName: 'Director general',
+        description: 'Observador pasivo de planes, notas y agenda ministerial sin facultades de mutación.',
       },
     ];
   }
