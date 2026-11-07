@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -32,18 +33,29 @@ export class ActivitiesController {
 
   @Post()
   create(@Body() dto: CreateActivityDto, @Req() req: any): Activity {
-    const creator = req.user?.email || 'Líder';
-    return this.activitiesService.create(dto, creator);
+    const creator = req.user?.fullName || req.user?.email || 'Líder';
+    return this.activitiesService.create(dto, creator, req.user?.role);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdateActivityDto, @Req() req: any): Activity {
-    const updater = req.user?.email || 'Líder';
-    return this.activitiesService.update(id, dto, updater);
+    const updater = req.user?.fullName || req.user?.email || 'Líder';
+    return this.activitiesService.update(id, dto, updater, req.user?.role);
+  }
+
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: string,
+    @Req() req: any,
+  ): Activity {
+    const userRole = req.user?.role;
+    const userName = req.user?.fullName || req.user?.userName || req.user?.email;
+    return this.activitiesService.updateStatus(id, status, userRole, userName);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): { success: boolean; message: string } {
-    return this.activitiesService.delete(id);
+  delete(@Param('id') id: string, @Req() req: any): { success: boolean; message: string } {
+    return this.activitiesService.delete(id, req.user?.role);
   }
 }

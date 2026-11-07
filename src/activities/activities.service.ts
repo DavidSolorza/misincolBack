@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Activity } from './entities/activity.entity';
 import { CreateActivityDto, UpdateActivityDto } from './dto/create-activity.dto';
@@ -22,7 +22,10 @@ export class ActivitiesService {
     return activity;
   }
 
-  create(dto: CreateActivityDto, createdBy?: string): Activity {
+  create(dto: CreateActivityDto, createdBy?: string, userRole?: string): Activity {
+    if (userRole === 'ROLE_USUARIO') {
+      throw new ForbiddenException('Los usuarios de equipo no tienen permisos para crear actividades.');
+    }
     const unitBudget = Number(dto.unitBudget) || 0;
     const timesPerYear = Number(dto.timesPerYear) || 1;
     const totalBudget = unitBudget * timesPerYear;
@@ -54,7 +57,10 @@ export class ActivitiesService {
     return newActivity;
   }
 
-  update(id: string, dto: UpdateActivityDto, updatedBy?: string): Activity {
+  update(id: string, dto: UpdateActivityDto, updatedBy?: string, userRole?: string): Activity {
+    if (userRole === 'ROLE_USUARIO') {
+      throw new ForbiddenException('Los usuarios de equipo solo pueden actualizar el estado de sus actividades.');
+    }
     const activity = this.findOne(id);
     const unitBudget = dto.unitBudget !== undefined ? Number(dto.unitBudget) : activity.unitBudget;
     const timesPerYear = dto.timesPerYear !== undefined ? Number(dto.timesPerYear) : activity.timesPerYear;
@@ -69,7 +75,24 @@ export class ActivitiesService {
     return activity;
   }
 
-  delete(id: string): { success: boolean; message: string } {
+  updateStatus(id: string, status: string, userRole?: string, userName?: string): Activity {
+    const activity = this.findOne(id);
+    if (userRole === 'ROLE_USUARIO') {
+      const cleanResp = (activity.responsible || '').toLowerCase().trim();
+      const cleanUser = (userName || '').toLowerCase().trim();
+      if (!cleanResp || (!cleanResp.includes(cleanUser) && !cleanUser.includes(cleanResp))) {
+        throw new ForbiddenException('Los usuarios de equipo solo pueden modificar el estado de sus actividades asignadas.');
+      }
+    }
+    activity.status = status as 'Pendiente' | 'En Proceso' | 'Completado';
+    activity.updatedBy = userName || activity.updatedBy;
+    return activity;
+  }
+
+  delete(id: string, userRole?: string): { success: boolean; message: string } {
+    if (userRole === 'ROLE_USUARIO') {
+      throw new ForbiddenException('Los usuarios de equipo no tienen permisos para eliminar actividades.');
+    }
     const initialLength = this.activities.length;
     this.activities = this.activities.filter((act) => act.id !== id);
     if (this.activities.length === initialLength) {

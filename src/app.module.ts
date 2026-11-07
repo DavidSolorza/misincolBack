@@ -10,6 +10,7 @@ import { TeamsModule } from './teams/teams.module';
 import { UsersModule } from './users/users.module';
 import { WorkflowModule } from './workflow/workflow.module';
 import { SecurityModule } from './security/security.module';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SecurityModule } from './security/security.module';
     NotificationsModule,
     PlansModule,
     SecurityModule,
+    AuditModule,
   ],
   controllers: [AppController],
 })

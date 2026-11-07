@@ -79,6 +79,19 @@ if (existing.length >= 4) {
   - `GET /security/roles`: Listado de roles reconocidos con sus metadatos y descripciones.
   - `PATCH /users/:id/role`: Asignación y cambio de rol a colaboradores del sistema (requiere `@Roles(UserRole.ROLE_NACIONAL)`).
 
+### 2.4. Restricción Estricta de Mutación para "Usuario de Equipo" (`ROLE_USUARIO`)
+- En `ObjectivesController`:
+  - `POST /objectives`, `PUT /objectives/:id` y `DELETE /objectives/:id` arrojan `ForbiddenException` si el rol del usuario autenticado es `ROLE_USUARIO`.
+- En `ActivitiesController` y `ActivitiesService`:
+  - `POST /activities`, `PUT /activities/:id` y `DELETE /activities/:id` bloquean a `ROLE_USUARIO` con `ForbiddenException`.
+  - Endpoint `PATCH /activities/:id/status`: Permite a `ROLE_USUARIO` modificar únicamente el estado de la actividad (`Pendiente`, `En Proceso`, `Completado`) **si y solo si** el campo `responsible` de la actividad coincide con el nombre del usuario autenticado. Para actividades asignadas a otros miembros, se deniega la operación con `ForbiddenException`.
+
+### 2.5. Módulo de Historial y Auditoría (`AuditController` & `AuditService`)
+- Endpoints protegidos exclusivamente para `ROLE_NACIONAL`:
+  - `GET /audit/logs`: Consulta paginada con filtros por misión, tipo de acción y fechas.
+  - `GET /audit/changes`: Trazabilidad detallada con `fieldModified`, `previousValue` y `newValue`.
+  - `GET /audit/logins`: Bitácora exclusiva de inicios de sesión con IP y usuario.
+
 ---
 
 ## 💻 3. Comandos de Ejecución

@@ -9,6 +9,7 @@ import {
   Query,
   Req,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { ObjectivesService } from './objectives.service';
@@ -33,18 +34,27 @@ export class ObjectivesController {
 
   @Post()
   create(@Body() dto: CreateObjectiveDto, @Req() req: any): Objective {
-    const creator = req.user?.email || 'Líder';
+    if (req.user?.role === 'ROLE_USUARIO') {
+      throw new ForbiddenException('Los usuarios de equipo no tienen permisos para crear objetivos.');
+    }
+    const creator = req.user?.fullName || req.user?.email || 'Líder';
     return this.objectivesService.create(dto, creator);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdateObjectiveDto, @Req() req: any): Objective {
-    const updater = req.user?.email || 'Líder';
+    if (req.user?.role === 'ROLE_USUARIO') {
+      throw new ForbiddenException('Los usuarios de equipo no tienen permisos para modificar objetivos.');
+    }
+    const updater = req.user?.fullName || req.user?.email || 'Líder';
     return this.objectivesService.update(id, dto, updater);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): { success: boolean; message: string } {
+  delete(@Param('id') id: string, @Req() req: any): { success: boolean; message: string } {
+    if (req.user?.role === 'ROLE_USUARIO') {
+      throw new ForbiddenException('Los usuarios de equipo no tienen permisos para eliminar objetivos.');
+    }
     return this.objectivesService.delete(id);
   }
 }
