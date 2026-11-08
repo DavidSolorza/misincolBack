@@ -20,6 +20,7 @@ describe('TeamBudgetCalculator (Unit Tests)', () => {
     expect(kpis.totalTeams).toBe(6);
     expect(kpis.totalNationalBudget).toBe(94610000);
     expect(kpis.totalExecutedBudget).toBe(44206000);
+    expect(kpis.totalRemainingBudget).toBe(50404000);
     expect(kpis.globalExecutionPercentage).toBe(47);
   });
 
@@ -31,7 +32,9 @@ describe('TeamBudgetCalculator (Unit Tests)', () => {
     expect(summary.teamId).toBe('team-pastos');
     expect(summary.totalBudget).toBe(11210000);
     expect(summary.executedBudget).toBe(4200000);
+    expect(summary.remainingBudget).toBe(7010000);
     expect(summary.budgetPercentage).toBe(37);
+    expect(summary.remainingPercentage).toBe(63);
     expect(summary.pillarBudgets.entrenamiento).toBe(11210000);
     expect(summary.pillarBudgets.investigacion).toBe(0);
   });

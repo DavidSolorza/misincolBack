@@ -3,6 +3,7 @@ import { Team } from '../entities/team.entity';
 export interface NationalBudgetKPIs {
   totalNationalBudget: number;
   totalExecutedBudget: number;
+  totalRemainingBudget: number;
   globalExecutionPercentage: number;
   totalTeams: number;
   teamsAtAttention: number;
@@ -14,7 +15,9 @@ export interface TeamBudgetSummary {
   teamName: string;
   totalBudget: number;
   executedBudget: number;
+  remainingBudget: number;
   budgetPercentage: number;
+  remainingPercentage: number;
   currentPhaseId?: string;
   pillarBudgets: Record<string, number>;
   totalActivities: number;
@@ -29,6 +32,7 @@ export function calculateExecutionPercentage(executed: number, total: number): n
 export function calculateNationalKPIs(teams: Team[]): NationalBudgetKPIs {
   const totalNationalBudget = teams.reduce((acc, t) => acc + (Number(t.totalBudget) || 0), 0);
   const totalExecutedBudget = teams.reduce((acc, t) => acc + (Number(t.executedBudget) || 0), 0);
+  const totalRemainingBudget = Math.max(0, totalNationalBudget - totalExecutedBudget);
   const globalExecutionPercentage = calculateExecutionPercentage(totalExecutedBudget, totalNationalBudget);
   const teamsAtAttention = teams.filter((t) => t.healthStatus === 'Atención').length;
   const teamsOptimal = teams.filter((t) => t.healthStatus === 'Optimo').length;
@@ -36,6 +40,7 @@ export function calculateNationalKPIs(teams: Team[]): NationalBudgetKPIs {
   return {
     totalNationalBudget,
     totalExecutedBudget,
+    totalRemainingBudget,
     globalExecutionPercentage,
     totalTeams: teams.length,
     teamsAtAttention,
@@ -47,13 +52,17 @@ export function buildTeamBudgetSummary(team: Team, activitiesCount = { total: 0,
   const total = Number(team.totalBudget) || 0;
   const executed = Number(team.executedBudget) || 0;
   const percentage = calculateExecutionPercentage(executed, total);
+  const remainingBudget = Math.max(0, total - executed);
+  const remainingPercentage = Math.max(0, 100 - percentage);
 
   return {
     teamId: team.id,
     teamName: team.name,
     totalBudget: total,
     executedBudget: executed,
+    remainingBudget,
     budgetPercentage: percentage,
+    remainingPercentage,
     currentPhaseId: team.currentPhaseId,
     pillarBudgets: team.pillarBudgets || {
       investigacion: 0,
@@ -66,4 +75,3 @@ export function buildTeamBudgetSummary(team: Team, activitiesCount = { total: 0,
     completedActivities: activitiesCount.completed,
   };
 }
-
