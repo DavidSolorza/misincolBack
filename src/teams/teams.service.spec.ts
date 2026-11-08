@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { BadRequestException } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 
 describe('TeamsService (Unit & State Tests)', () => {
@@ -45,6 +46,20 @@ describe('TeamsService (Unit & State Tests)', () => {
 
     const pastos = service.findOne('team-pastos');
     expect(pastos.members.some((m) => m.fullName === 'Misionero Prueba')).toBe(true);
+  });
+
+  it('debe rechazar actualizaciones de presupuesto por pilar que superen el presupuesto anual del equipo', () => {
+    expect(() => {
+      service.update('team-pastos', {
+        pillarBudgets: {
+          investigacion: 0,
+          encarnacion: 0,
+          evangelizacion: 0,
+          entrenamiento: 15000000,
+          autocuidado: 0,
+        },
+      });
+    }).toThrow(BadRequestException);
   });
 
   it('debe restablecer la base de datos a las semillas oficiales limpias', async () => {

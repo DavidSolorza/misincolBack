@@ -3,6 +3,7 @@ import { Team, TeamMember } from './entities/team.entity';
 import { CreateTeamDto, AddTeamMemberDto } from './dto/create-team.dto';
 import { INITIAL_TEAMS_DATA } from './helpers/initial-teams.data';
 import { JsonDbService } from '../common/db/json-db.service';
+import { validatePillarBudgets } from './validators/pillar-budget.validator';
 import {
   calculateExecutionPercentage,
   calculateNationalKPIs,
@@ -61,6 +62,11 @@ export class TeamsService implements OnModuleInit {
 
   update(id: string, updates: Partial<Team>, updatedBy?: string): Team {
     const team = this.findOne(id);
+    const targetTotalBudget = updates.totalBudget !== undefined ? Number(updates.totalBudget) : team.totalBudget;
+    const targetPillarBudgets = updates.pillarBudgets || team.pillarBudgets;
+
+    validatePillarBudgets(targetTotalBudget, targetPillarBudgets);
+
     Object.assign(team, updates, { updatedBy: updatedBy || team.updatedBy });
     team.budgetPercentage = calculateExecutionPercentage(team.executedBudget, team.totalBudget);
     this.persist();
