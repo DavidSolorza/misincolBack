@@ -1,5 +1,60 @@
 [
   {
+    "id": "9d9b4e62-502b-4e0c-9771-47a03ccef8bf",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Nukak Makú - Selva de Guaviare",
+    "message": "La misión Misión Nukak Makú - Selva de Guaviare ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Nukak Makú - Selva de Guaviare",
+    "isRead": false,
+    "metadata": {},
+    "createdAt": "2026-11-13T20:07:06.577Z"
+  },
+  {
+    "id": "b5e0127d-6c71-4410-887a-fa10ee3fe493",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Iku - Sierra Nevada",
+    "message": "La misión Misión Iku - Sierra Nevada ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Iku - Sierra Nevada",
+    "isRead": false,
+    "metadata": {},
+    "createdAt": "2026-11-13T20:07:05.158Z"
+  },
+  {
+    "id": "a8a3249d-73a2-45c9-9ddf-6794a482e759",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Emberá Chamí - Risaralda",
+    "message": "La misión Misión Emberá Chamí - Risaralda ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Emberá Chamí - Risaralda",
+    "isRead": false,
+    "metadata": {},
+    "createdAt": "2026-11-13T20:07:03.665Z"
+  },
+  {
+    "id": "2460e34c-8eff-4019-8265-cab91bf1a5e2",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Wayuu - Alta Guajira",
+    "message": "La misión Misión Wayuu - Alta Guajira ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Wayuu - Alta Guajira",
+    "isRead": false,
+    "metadata": {},
+    "createdAt": "2026-11-13T20:07:01.879Z"
+  },
+  {
+    "id": "006364ed-a844-49d4-be13-b116b835aa01",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Nasa - Tierradentro",
+    "message": "La misión Misión Nasa - Tierradentro ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Nasa - Tierradentro",
+    "isRead": false,
+    "metadata": {},
+    "createdAt": "2026-11-13T20:06:58.818Z"
+  },
+  {
     "id": "4f12458c-8324-43c3-bff2-0af89fa0f881",
     "category": "SYSTEM",
     "severity": "INFO",
