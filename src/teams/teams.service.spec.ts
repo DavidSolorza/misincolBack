@@ -1,12 +1,15 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { BadRequestException } from '@nestjs/common';
 import { TeamsService } from './teams.service';
+import { UsersService } from '../users/users.service';
 
 describe('TeamsService (Unit & State Tests)', () => {
   let service: TeamsService;
+  let usersService: UsersService;
 
   beforeEach(() => {
-    service = new TeamsService();
+    usersService = new UsersService();
+    service = new TeamsService(undefined, usersService);
   });
 
   it('debe listar los 6 equipos con el porcentaje de presupuesto calculado', () => {
@@ -75,5 +78,34 @@ describe('TeamsService (Unit & State Tests)', () => {
 
     const clean = await service.resetCleanDatabase();
     expect(clean.length).toBe(6);
+  });
+
+  it('debe aprovisionar usuarios en UsersService al crear un equipo con integrantes con cuentas', () => {
+    const created = service.create({
+      name: 'Misión Vaupés',
+      leader: 'Líder Vaupés',
+      leaderEmail: 'lider.vaupes@misincol.org',
+      accessPin: 'vaupes2026',
+      location: 'Mitú',
+      population: 40000,
+      evangelicaCongregations: 1,
+      evangelicalsCount: 100,
+      totalBudget: 15000000,
+      membersWithAccounts: [
+        {
+          fullName: 'Misionero Pedro',
+          email: 'pedro.vaupes@misincol.org',
+          roleInTeam: 'Logística de Selva',
+        },
+      ],
+    });
+
+    expect(created.id).toBeDefined();
+    expect(created.members.length).toBe(1);
+    expect(created.members[0].contactInfo).toBe('pedro.vaupes@misincol.org');
+
+    const pedroUser = usersService.findByEmail('pedro.vaupes@misincol.org');
+    expect(pedroUser).toBeDefined();
+    expect(pedroUser?.teamId).toBe(created.id);
   });
 });

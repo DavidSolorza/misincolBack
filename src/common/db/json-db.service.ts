@@ -50,10 +50,38 @@ export class JsonDbService {
     }
   }
 
+  async readObject<T extends object>(collection: string, defaultData: T): Promise<T> {
+    const filePath = this.getFilePath(collection);
+    try {
+      if (!fs.existsSync(filePath)) {
+        await this.writeObject(collection, defaultData);
+        return defaultData;
+      }
+      const raw = await fs.promises.readFile(filePath, 'utf-8');
+      const parsed = JSON.parse(raw);
+      return (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? (parsed as T) : defaultData;
+    } catch (err: any) {
+      this.logger.warn(`Error leyendo objeto '${collection}': ${err.message}. Usando datos base.`);
+      return defaultData;
+    }
+  }
+
+  async writeObject<T extends object>(collection: string, data: T): Promise<void> {
+    this.ensureDataDir();
+    const filePath = this.getFilePath(collection);
+    const tempPath = `${filePath}.tmp`;
+    const serialized = JSON.stringify(data, null, 2);
+    try {
+      await fs.promises.writeFile(tempPath, serialized, 'utf-8');
+      await fs.promises.rename(tempPath, filePath);
+    } catch {
+      await fs.promises.writeFile(filePath, serialized, 'utf-8');
+    }
+  }
+
   async resetCollection<T>(collection: string, cleanData: T[]): Promise<T[]> {
     await this.write(collection, cleanData);
     this.logger.log(`Colección '${collection}' restablecida a su versión limpia oficial.`);
     return cleanData;
   }
 }
-

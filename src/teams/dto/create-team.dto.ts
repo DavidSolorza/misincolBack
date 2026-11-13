@@ -1,4 +1,19 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsArray, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class TeamMemberAccountDto {
+  @IsString()
+  @IsNotEmpty({ message: 'El nombre del integrante es obligatorio' })
+  fullName: string;
+
+  @IsEmail({}, { message: 'El correo electrónico debe ser válido' })
+  @IsNotEmpty({ message: 'El correo del integrante es obligatorio' })
+  email: string;
+
+  @IsString()
+  @IsOptional()
+  roleInTeam?: string;
+}
 
 export class CreateTeamDto {
   @IsString()
@@ -27,7 +42,15 @@ export class CreateTeamDto {
 
   @IsString()
   @IsOptional()
+  leaderEmail?: string;
+
+  @IsString()
+  @IsOptional()
   leaderPhone?: string;
+
+  @IsString()
+  @IsOptional()
+  accessPin?: string;
 
   @IsString()
   @IsOptional()
@@ -62,6 +85,16 @@ export class CreateTeamDto {
   @IsString()
   @IsOptional()
   healthStatus?: 'Optimo' | 'Atención' | 'Crítico';
+
+  @IsArray()
+  @IsOptional()
+  members?: string[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => TeamMemberAccountDto)
+  membersWithAccounts?: TeamMemberAccountDto[];
 }
 
 export class AddTeamMemberDto {
@@ -77,4 +110,3 @@ export class AddTeamMemberDto {
   @IsNotEmpty()
   roleInTeam: string;
 }
-

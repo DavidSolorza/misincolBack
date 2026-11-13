@@ -7,40 +7,27 @@ import {
 } from 'class-validator';
 
 export const STAGES_BY_AREA_MAP: Record<string, string[]> = {
-  Investigación: ['Contacto', 'Contacto primeros oyentes'],
+  Investigación: ['Contacto'],
   Encarnación: [
     'Contacto',
     'Comunicar',
-    'Respuesta',
-    'Comunicar el evangelio',
+    'Respuesta'
   ],
   Evangelización: [
     'Respuesta',
     'Reunirse',
     'Consolidar',
-    'Respuesta al evangelio',
-    'Guiamos a reunirse',
-    'Consolidamos',
   ],
   Entrenamiento: [
     'Consolidar',
     'Liderazgo',
-    'Desarrollo eclesial',
-    'Desarrollo Eclesial',
-    'Involucrar liderazgo en el proceso',
-    'Pluralidad de liderazgo',
+    'Desarrollo eclesial'
   ],
   Autocuidado: [
     'Auto-cuidado',
-    'Auto Cuidado del Misionero',
-    'ADN Multiplicador',
-    'Salida progresiva',
   ],
   'Auto-cuidado': [
     'Auto-cuidado',
-    'Auto Cuidado del Misionero',
-    'ADN Multiplicador',
-    'Salida progresiva',
   ],
 };
 

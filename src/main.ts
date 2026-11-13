@@ -3,6 +3,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
+try {
+  process.loadEnvFile?.('.env');
+} catch {
+  // .env opcional
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   

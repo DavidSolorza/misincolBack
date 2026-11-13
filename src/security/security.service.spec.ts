@@ -30,10 +30,43 @@ describe('SecurityService & RBAC (Unit Tests)', () => {
     expect(service.hasPermission(UserRole.ROLE_USUARIO, 'pdm.objectives.manage')).toBe(false);
   });
 
-  it('debe habilitar control total para el Director Nacional', () => {
-    expect(service.hasPermission(UserRole.ROLE_NACIONAL, 'pdm.view')).toBe(true);
-    expect(service.hasPermission(UserRole.ROLE_NACIONAL, 'pdm.activities.edit')).toBe(true);
-    expect(service.hasPermission(UserRole.ROLE_NACIONAL, 'security.roles.manage')).toBe(true);
-    expect(service.hasPermission(UserRole.ROLE_NACIONAL, 'audit.history.view')).toBe(true);
+  it('debe proteger privilegios raíz del Coordinador ante intentos de desactivación', async () => {
+    const maliciousUpdate = {
+      [UserRole.ROLE_NACIONAL]: {
+        'security.roles.manage': false,
+        'audit.history.view': false,
+      },
+      national_director: {
+        'security.roles.manage': false,
+        'audit.history.view': false,
+      },
+    };
+    const sanitized = await service.updateMatrix(maliciousUpdate);
+    expect(sanitized[UserRole.ROLE_NACIONAL]['security.roles.manage']).toBe(true);
+    expect(sanitized[UserRole.ROLE_NACIONAL]['audit.history.view']).toBe(true);
+    expect(sanitized['national_director']['security.roles.manage']).toBe(true);
+  });
+
+  it('debe impedir escaladas ilegales de privilegio para Director General y Usuario de Equipo', async () => {
+    const illegalEscalation = {
+      [UserRole.ROLE_DIRECTOR_GENERAL]: {
+        'pdm.activities.edit': true,
+        'security.roles.manage': true,
+      },
+      [UserRole.ROLE_USUARIO]: {
+        'security.roles.manage': true,
+        'reports.national.view': true,
+      },
+    };
+    const sanitized = await service.updateMatrix(illegalEscalation);
+    expect(sanitized[UserRole.ROLE_DIRECTOR_GENERAL]['pdm.activities.edit']).toBe(false);
+    expect(sanitized[UserRole.ROLE_DIRECTOR_GENERAL]['security.roles.manage']).toBe(false);
+    expect(sanitized[UserRole.ROLE_USUARIO]['security.roles.manage']).toBe(false);
+    expect(sanitized[UserRole.ROLE_USUARIO]['reports.national.view']).toBe(false);
+  });
+
+  it('debe sincronizar usuarios correctamente', async () => {
+    const syncRes = await service.syncUsers([{ id: 'u1', fullName: 'Carlos' }]);
+    expect(syncRes.savedCount).toBe(1);
   });
 });

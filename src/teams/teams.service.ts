@@ -4,6 +4,8 @@ import { CreateTeamDto, AddTeamMemberDto } from './dto/create-team.dto';
 import { INITIAL_TEAMS_DATA } from './helpers/initial-teams.data';
 import { JsonDbService } from '../common/db/json-db.service';
 import { validatePillarBudgets } from './validators/pillar-budget.validator';
+import { UsersService } from '../users/users.service';
+import { TeamUsersProvisioner } from './helpers/team-users-provisioner';
 import {
   calculateExecutionPercentage,
   calculateNationalKPIs,
@@ -16,7 +18,10 @@ import {
 export class TeamsService implements OnModuleInit {
   private teams: Team[] = [...INITIAL_TEAMS_DATA];
 
-  constructor(@Optional() private readonly jsonDb?: JsonDbService) {}
+  constructor(
+    @Optional() private readonly jsonDb?: JsonDbService,
+    @Optional() private readonly usersService?: UsersService,
+  ) {}
 
   async onModuleInit(): Promise<void> {
     if (this.jsonDb) {
@@ -55,6 +60,17 @@ export class TeamsService implements OnModuleInit {
       createdBy: createdBy || 'ROLE_NACIONAL',
       updatedBy: createdBy || 'ROLE_NACIONAL',
     };
+    if (this.usersService) {
+      newTeam.members = TeamUsersProvisioner.provisionTeamAccounts(newTeam, dto, this.usersService);
+    } else if (dto.members && dto.members.length > 0) {
+      newTeam.members = dto.members.map((name, idx) => ({
+        id: `tm-${Date.now()}-${idx + 1}`,
+        teamId: newTeam.id,
+        fullName: name.trim(),
+        contactInfo: '',
+        roleInTeam: idx === 0 ? 'Líder Pastoral' : 'Misionero de Campo',
+      }));
+    }
     this.teams.push(newTeam);
     this.persist();
     return newTeam;

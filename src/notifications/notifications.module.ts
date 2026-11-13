@@ -6,6 +6,9 @@ import { ReportsModule } from '../reports/reports.module';
 import { TeamsModule } from '../teams/teams.module';
 import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
+import { NotificationStorageService } from './infrastructure/notification-storage.service';
+import { NotificationDispatcherService } from './application/notification-dispatcher.service';
+import { MailTransportService } from './infrastructure/mail-transport.service';
 
 @Module({
   imports: [
@@ -16,8 +19,17 @@ import { NotificationsService } from './notifications.service';
     TeamsModule,
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsService],
-  exports: [NotificationsService],
+  providers: [
+    NotificationsService,
+    NotificationStorageService,
+    NotificationDispatcherService,
+    MailTransportService,
+  ],
+  exports: [
+    NotificationsService,
+    NotificationStorageService,
+    NotificationDispatcherService,
+    MailTransportService,
+  ],
 })
 export class NotificationsModule {}
-

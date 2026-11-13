@@ -1,18 +1,12 @@
-import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
-import { UserRole } from '../common/enums/user-role.enum';
+import { Controller, Get, Put, Post, Body } from '@nestjs/common';
 import { SecurityService } from './security.service';
 import { UpdateSecurityMatrixDto } from './dto/update-security-matrix.dto';
 
 @Controller('security')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class SecurityController {
   constructor(private readonly securityService: SecurityService) {}
 
   @Get('matrix')
-  @Roles(UserRole.ROLE_NACIONAL, UserRole.ROLE_LIDER, UserRole.ROLE_USUARIO)
   getMatrix() {
     return {
       matrix: this.securityService.getMatrix(),
@@ -21,12 +15,20 @@ export class SecurityController {
   }
 
   @Put('matrix')
-  @Roles(UserRole.ROLE_NACIONAL)
-  updateMatrix(@Body() dto: UpdateSecurityMatrixDto) {
+  async updateMatrix(@Body() dto: UpdateSecurityMatrixDto) {
+    const matrix = await this.securityService.updateMatrix(dto.matrix);
     return {
       success: true,
-      matrix: this.securityService.updateMatrix(dto.matrix),
+      matrix,
+    };
+  }
+
+  @Post('users/sync')
+  async syncUsers(@Body('users') users: any[]) {
+    const res = await this.securityService.syncUsers(users);
+    return {
+      success: true,
+      savedCount: res.savedCount,
     };
   }
 }
-

@@ -1,0 +1,164 @@
+[
+  {
+    "id": "4f12458c-8324-43c3-bff2-0af89fa0f881",
+    "category": "SYSTEM",
+    "severity": "INFO",
+    "title": "Despliegue Territorial: Misi�n Guambiana",
+    "message": "Nueva misión Misi�n Guambiana creada bajo el liderazgo de Pr. Manuel Tunubala. Credenciales enviadas.",
+    "teamName": "Misi�n Guambiana",
+    "isRead": false,
+    "metadata": {},
+    "createdAt": "2026-11-13T19:48:10.230Z"
+  },
+  {
+    "id": "dd04553b-de1e-429b-acfd-681a8d7c6640",
+    "category": "SYSTEM",
+    "severity": "INFO",
+    "title": "Despliegue Territorial: pastos",
+    "message": "Nueva misión pastos creada bajo el liderazgo de Hugo solorza. Credenciales enviadas.",
+    "teamName": "pastos",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T13:41:06.698Z"
+  },
+  {
+    "id": "99137fd1-7004-4661-886e-5f75c99b2936",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Nukak Makú - Selva de Guaviare",
+    "message": "La misión Misión Nukak Makú - Selva de Guaviare ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Nukak Makú - Selva de Guaviare",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T13:40:02.131Z"
+  },
+  {
+    "id": "9b1d5ec7-6dbb-41fc-8636-6c77051f252e",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Iku - Sierra Nevada",
+    "message": "La misión Misión Iku - Sierra Nevada ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Iku - Sierra Nevada",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T13:39:57.658Z"
+  },
+  {
+    "id": "73b1b4a1-d32d-43b5-a0a5-1bde38f71cdd",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Emberá Chamí - Risaralda",
+    "message": "La misión Misión Emberá Chamí - Risaralda ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Emberá Chamí - Risaralda",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T13:39:54.519Z"
+  },
+  {
+    "id": "18ec8780-8142-4c67-bcba-a56718e29139",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Pastos - Cumbal",
+    "message": "La misión Misión Pastos - Cumbal ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Pastos - Cumbal",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T13:39:52.116Z"
+  },
+  {
+    "id": "b3b3569d-bbda-4d3d-9bee-bc23597275e3",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Nasa - Tierradentro",
+    "message": "La misión Misión Nasa - Tierradentro ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Nasa - Tierradentro",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T13:39:49.154Z"
+  },
+  {
+    "id": "ea852531-10d8-421b-8f13-65eecc584510",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misión Wayuu - Alta Guajira",
+    "message": "La misión Misión Wayuu - Alta Guajira ha sido dada de baja del sistema por Dirección Nacional.",
+    "teamName": "Misión Wayuu - Alta Guajira",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T13:39:46.474Z"
+  },
+  {
+    "id": "da402af2-da58-407d-84d0-63b06bc171a4",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Misión Eliminada: Misi�n Guambiana - Silvia",
+    "message": "La misión Misi�n Guambiana - Silvia ha sido dada de baja del sistema por Direcci�n Nacional.",
+    "teamName": "Misi�n Guambiana - Silvia",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T01:08:07.193Z"
+  },
+  {
+    "id": "1c1229db-721b-4dea-b326-42e83217fa24",
+    "category": "SYSTEM",
+    "severity": "INFO",
+    "title": "Despliegue Territorial: Misi�n Guambiana - Silvia",
+    "message": "Nueva misión Misi�n Guambiana - Silvia creada bajo el liderazgo de Pr. Lorenzo Muelas. Credenciales enviadas.",
+    "teamName": "Misi�n Guambiana - Silvia",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-13T01:06:32.243Z"
+  },
+  {
+    "id": "f1c32ce7-f430-44d9-8f21-52b6dbf72dbc",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Prueba de Entrega de Correo",
+    "message": "Verificando recepci�n de correo institucional.",
+    "targetUserEmail": "hudisapastos@misincol.org",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-12T20:41:18.822Z"
+  },
+  {
+    "id": "363082e5-d35e-48a3-aee5-ba26ccf580fa",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Actualizaci�n de Permisos Pastorales",
+    "message": "Se han confirmado las facultades de Coordinaci�n Nacional para Hugo en Misi�n Pastos.",
+    "targetUserEmail": "david.josue.solorza@gmail.com",
+    "teamName": "Misi�n Pastos",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-12T20:24:52.750Z"
+  },
+  {
+    "id": "06ab0cca-0dcb-4d54-a94c-d10e04e87824",
+    "category": "SECURITY",
+    "severity": "WARNING",
+    "title": "Notificaci�n de Prueba en Vivo",
+    "message": "Hugo fue promovido a Coordinador de Equipos",
+    "targetUserEmail": "hugopastos@misincol.org",
+    "isRead": true,
+    "metadata": {},
+    "createdAt": "2026-11-12T18:54:09.317Z"
+  },
+  {
+    "id": "notif-init-1",
+    "category": "SECURITY",
+    "severity": "INFO",
+    "title": "Gobernanza RBAC Actualizada",
+    "message": "La matriz de roles y permisos se encuentra activa con salvaguardas de seguridad institucional.",
+    "isRead": true,
+    "createdAt": "2026-11-12T17:44:39.578Z"
+  },
+  {
+    "id": "notif-init-2",
+    "category": "NOTES_AGENDA",
+    "severity": "SUCCESS",
+    "title": "Agenda Ministerial 2026 Habilitada",
+    "message": "Se encuentra disponible el módulo de notas y compromisos de misión territorial.",
+    "isRead": true,
+    "createdAt": "2026-11-12T17:44:39.578Z"
+  }
+]

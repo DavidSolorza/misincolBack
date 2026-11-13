@@ -1,25 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { FieldReport } from './entities/field-report.entity';
 import { CreateFieldReportDto, UpdateFieldReportDto } from './dto/create-field-report.dto';
+import { BaseInMemoryService } from '../common/services/base-in-memory.service';
 
 @Injectable()
-export class ReportsService {
-  private reports: FieldReport[] = [];
+export class ReportsService extends BaseInMemoryService<FieldReport> {
+  protected readonly entityName = 'Informe de campo';
 
-  findAll(teamId?: string, year?: number): FieldReport[] {
-    let result = [...this.reports];
+  override findAll(teamId?: string, year?: number): FieldReport[] {
+    let result = [...this.items];
     if (teamId) result = result.filter((rep) => rep.teamId === teamId);
     if (year) result = result.filter((rep) => rep.year === Number(year));
     return result;
   }
 
   findOne(id: string): FieldReport {
-    const report = this.reports.find((rep) => rep.id === id);
-    if (!report) {
-      throw new NotFoundException(`Informe de campo ${id} no encontrado`);
-    }
-    return report;
+    return this.findById(id);
   }
 
   create(dto: CreateFieldReportDto): FieldReport {
@@ -46,22 +43,18 @@ export class ReportsService {
       updatedAt: now,
     };
 
-    this.reports.push(newReport);
+    this.items.push(newReport);
     return newReport;
   }
 
   update(id: string, dto: UpdateFieldReportDto): FieldReport {
-    const report = this.findOne(id);
+    const report = this.findById(id);
     Object.assign(report, dto, { updatedAt: new Date().toISOString() });
     return report;
   }
 
   delete(id: string): { success: boolean; message: string } {
-    const initialLen = this.reports.length;
-    this.reports = this.reports.filter((rep) => rep.id !== id);
-    if (this.reports.length === initialLen) {
-      throw new NotFoundException(`Informe de campo ${id} no encontrado`);
-    }
+    this.removeById(id);
     return { success: true, message: `Informe ${id} eliminado` };
   }
 
@@ -69,8 +62,8 @@ export class ReportsService {
     return {
       backupType: 'MASS_BACKUP_JSON',
       generatedAt: new Date().toISOString(),
-      totalRecords: this.reports.length,
-      data: this.reports,
+      totalRecords: this.items.length,
+      data: this.items,
     };
   }
 
@@ -79,8 +72,8 @@ export class ReportsService {
       backupType: 'MASS_BACKUP_EXCEL',
       generatedAt: new Date().toISOString(),
       filename: `respaldo_general_pdm_${Date.now()}.xlsx`,
-      totalRecords: this.reports.length,
-      data: this.reports,
+      totalRecords: this.items.length,
+      data: this.items,
     };
   }
 

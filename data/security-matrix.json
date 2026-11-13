@@ -1,7 +1,7 @@
 {
   "ROLE_USUARIO": {
     "pdm.view": true,
-    "pdm.activities.edit": false,
+    "pdm.activities.edit": true,
     "pdm.activities.delete": false,
     "pdm.objectives.manage": false,
     "team.tasks.assign": false,
@@ -16,9 +16,9 @@
     "pdm.view": true,
     "pdm.activities.edit": true,
     "pdm.activities.delete": true,
-    "pdm.objectives.manage": false,
+    "pdm.objectives.manage": true,
     "team.tasks.assign": true,
-    "team.members.manage": false,
+    "team.members.manage": true,
     "notes.manage": true,
     "reports.team.export": true,
     "reports.national.view": false,
@@ -46,10 +46,60 @@
     "team.tasks.assign": false,
     "team.members.manage": false,
     "notes.manage": true,
-    "reports.team.export": false,
-    "reports.national.view": false,
+    "reports.team.export": true,
+    "reports.national.view": true,
     "audit.history.view": false,
     "security.roles.manage": false
+  },
+  "team_member": {
+    "reports.national.view": false,
+    "notes.manage": true,
+    "pdm.activities.delete": false,
+    "pdm.activities.edit": true,
+    "team.members.manage": false,
+    "reports.team.export": true,
+    "security.roles.manage": false,
+    "pdm.view": true,
+    "audit.history.view": false,
+    "team.tasks.assign": false,
+    "pdm.objectives.manage": false
+  },
+  "team_leader": {
+    "reports.national.view": false,
+    "notes.manage": true,
+    "pdm.activities.delete": true,
+    "pdm.activities.edit": true,
+    "team.members.manage": true,
+    "reports.team.export": true,
+    "security.roles.manage": false,
+    "pdm.view": true,
+    "audit.history.view": false,
+    "team.tasks.assign": true,
+    "pdm.objectives.manage": true
+  },
+  "director_general": {
+    "security.roles.manage": false,
+    "audit.history.view": false,
+    "notes.manage": true,
+    "pdm.activities.delete": false,
+    "reports.national.view": true,
+    "reports.team.export": true,
+    "pdm.view": true,
+    "pdm.activities.edit": false,
+    "pdm.objectives.manage": false,
+    "team.members.manage": false
+  },
+  "national_director": {
+    "reports.national.view": true,
+    "notes.manage": true,
+    "pdm.activities.delete": true,
+    "pdm.activities.edit": true,
+    "team.members.manage": true,
+    "reports.team.export": true,
+    "security.roles.manage": true,
+    "pdm.view": true,
+    "audit.history.view": true,
+    "team.tasks.assign": true,
+    "pdm.objectives.manage": true
   }
 }
-

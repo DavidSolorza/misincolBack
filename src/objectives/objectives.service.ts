@@ -1,44 +1,48 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Objective } from './entities/objective.entity';
 import { CreateObjectiveDto, UpdateObjectiveDto } from './dto/create-objective.dto';
+import { BaseInMemoryService } from '../common/services/base-in-memory.service';
 
 @Injectable()
-export class ObjectivesService {
-  private objectives: Objective[] = [
-    {
-      id: 'obj-wayuu-inv-1',
-      teamId: 'team-wayuu',
-      pillarId: 'investigacion',
-      dynamicPosition: 1,
-      title: 'Diagnóstico Socio-Espiritual de Comunidades y Castas',
-      description: 'Mapeo territorial y caracterización etnográfica en la Alta Guajira.',
-      essentialArea: 'Investigación',
-      level: 'Nivel 1',
-      stage: 'Contacto primeros oyentes',
-      mediumTermGoal: '10 comunidades cartografiadas',
-      longTermGoal: 'Censo de clanes y autoridades tradicionales',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: 'obj-wayuu-inv-2',
-      teamId: 'team-wayuu',
-      pillarId: 'investigacion',
-      dynamicPosition: 2,
-      title: 'Inmersión Lingüística y Cosmovisión Wayuu',
-      description: 'Estudio de narrativas orales y dialectos wayuunaiki.',
-      essentialArea: 'Investigación',
-      level: 'Nivel 2',
-      stage: 'Contacto primeros oyentes',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ];
+export class ObjectivesService extends BaseInMemoryService<Objective> {
+  protected readonly entityName = 'Objetivo';
 
-  findAll(): Objective[] { return this.objectives; }
+  constructor() {
+    super();
+    this.items = [
+      {
+        id: 'obj-wayuu-inv-1',
+        teamId: 'team-wayuu',
+        pillarId: 'investigacion',
+        dynamicPosition: 1,
+        title: 'Diagnóstico Socio-Espiritual de Comunidades y Castas',
+        description: 'Mapeo territorial y caracterización etnográfica en la Alta Guajira.',
+        essentialArea: 'Investigación',
+        level: 'Nivel 1',
+        stage: 'Contacto',
+        mediumTermGoal: '10 comunidades cartografiadas',
+        longTermGoal: 'Censo de clanes y autoridades tradicionales',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'obj-wayuu-inv-2',
+        teamId: 'team-wayuu',
+        pillarId: 'investigacion',
+        dynamicPosition: 2,
+        title: 'Inmersión Lingüística y Cosmovisión Wayuu',
+        description: 'Estudio de narrativas orales y dialectos wayuunaiki.',
+        essentialArea: 'Investigación',
+        level: 'Nivel 2',
+        stage: 'Contacto',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    ];
+  }
 
   findByTeamAndPillar(teamId: string, pillarId: string): Objective[] {
-    return this.objectives
+    return this.items
       .filter((o) => o.teamId === teamId && o.pillarId.toLowerCase() === pillarId.toLowerCase())
       .sort((a, b) => a.dynamicPosition - b.dynamicPosition);
   }
@@ -70,33 +74,26 @@ export class ObjectivesService {
       updatedBy: createdBy || 'Líder',
     };
 
-    this.objectives.push(newObjective);
+    this.items.push(newObjective);
     return newObjective;
   }
 
   update(id: string, dto: UpdateObjectiveDto, updatedBy?: string): Objective {
-    const obj = this.objectives.find((o) => o.id === id);
-    if (!obj) throw new NotFoundException(`Objetivo ${id} no encontrado`);
+    const obj = this.findById(id);
     Object.assign(obj, dto, { updatedAt: new Date().toISOString(), updatedBy });
     return obj;
   }
 
   delete(id: string): { success: boolean; message: string } {
-    const target = this.objectives.find((o) => o.id === id);
-    if (!target) throw new NotFoundException(`Objetivo ${id} no encontrado`);
-
+    const target = this.findById(id);
     const { teamId, pillarId } = target;
-    this.objectives = this.objectives.filter((o) => o.id !== id);
+    this.removeById(id);
     this.recalculatePositions(teamId, pillarId);
-
     return { success: true, message: `Objetivo ${id} eliminado y numeración recalculada.` };
   }
 
   private recalculatePositions(teamId: string, pillarId: string): void {
-    const remaining = this.objectives
-      .filter((o) => o.teamId === teamId && o.pillarId.toLowerCase() === pillarId.toLowerCase())
-      .sort((a, b) => a.dynamicPosition - b.dynamicPosition);
-
+    const remaining = this.findByTeamAndPillar(teamId, pillarId);
     remaining.forEach((obj, idx) => {
       obj.dynamicPosition = idx + 1;
       obj.updatedAt = new Date().toISOString();

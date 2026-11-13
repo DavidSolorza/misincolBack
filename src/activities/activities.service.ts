@@ -1,25 +1,22 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Activity } from './entities/activity.entity';
 import { CreateActivityDto, UpdateActivityDto } from './dto/create-activity.dto';
+import { BaseInMemoryService } from '../common/services/base-in-memory.service';
 
 @Injectable()
-export class ActivitiesService {
-  private activities: Activity[] = [];
+export class ActivitiesService extends BaseInMemoryService<Activity> {
+  protected readonly entityName = 'Actividad';
 
-  findAll(objectiveId?: string): Activity[] {
+  override findAll(objectiveId?: string): Activity[] {
     if (objectiveId) {
-      return this.activities.filter((act) => act.objectiveId === objectiveId);
+      return this.items.filter((act) => act.objectiveId === objectiveId);
     }
-    return [...this.activities];
+    return [...this.items];
   }
 
   findOne(id: string): Activity {
-    const activity = this.activities.find((act) => act.id === id);
-    if (!activity) {
-      throw new NotFoundException(`Actividad con ID ${id} no encontrada`);
-    }
-    return activity;
+    return this.findById(id);
   }
 
   create(dto: CreateActivityDto, createdBy?: string, userRole?: string): Activity {
@@ -54,7 +51,7 @@ export class ActivitiesService {
       updatedBy: createdBy || 'Líder',
     };
 
-    this.activities.push(newActivity);
+    this.items.push(newActivity);
     return newActivity;
   }
 
@@ -62,7 +59,7 @@ export class ActivitiesService {
     if (userRole === 'ROLE_USUARIO') {
       throw new ForbiddenException('Los usuarios de equipo solo pueden actualizar el estado de sus actividades.');
     }
-    const activity = this.findOne(id);
+    const activity = this.findById(id);
     const unitBudget = dto.unitBudget !== undefined ? Number(dto.unitBudget) : activity.unitBudget;
     const timesPerYear = dto.timesPerYear !== undefined ? Number(dto.timesPerYear) : activity.timesPerYear;
     const monthlyBudget = dto.monthlyBudget !== undefined ? dto.monthlyBudget : activity.monthlyBudget;
@@ -78,16 +75,8 @@ export class ActivitiesService {
     return activity;
   }
 
-  private calcBudget(unit: number, times: number, monthly?: number[]): number {
-    if (monthly && Array.isArray(monthly) && monthly.length > 0) {
-      const sum = monthly.reduce((acc, m) => acc + (Number(m) || 0), 0);
-      if (sum > 0) return sum;
-    }
-    return unit * times;
-  }
-
   updateStatus(id: string, status: string, userRole?: string, userName?: string): Activity {
-    const activity = this.findOne(id);
+    const activity = this.findById(id);
     if (userRole === 'ROLE_USUARIO') {
       const cleanResp = (activity.responsible || '').toLowerCase().trim();
       const cleanUser = (userName || '').toLowerCase().trim();
@@ -104,11 +93,15 @@ export class ActivitiesService {
     if (userRole === 'ROLE_USUARIO') {
       throw new ForbiddenException('Los usuarios de equipo no tienen permisos para eliminar actividades.');
     }
-    const initialLength = this.activities.length;
-    this.activities = this.activities.filter((act) => act.id !== id);
-    if (this.activities.length === initialLength) {
-      throw new NotFoundException(`Actividad con ID ${id} no encontrada`);
-    }
+    this.removeById(id);
     return { success: true, message: `Actividad ${id} eliminada exitosamente` };
+  }
+
+  private calcBudget(unit: number, times: number, monthly?: number[]): number {
+    if (monthly && Array.isArray(monthly) && monthly.length > 0) {
+      const sum = monthly.reduce((acc, m) => acc + (Number(m) || 0), 0);
+      if (sum > 0) return sum;
+    }
+    return unit * times;
   }
 }
