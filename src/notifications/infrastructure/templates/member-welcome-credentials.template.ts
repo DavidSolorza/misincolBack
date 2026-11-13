@@ -57,3 +57,4 @@ export function buildMemberWelcomeCredentialsHtml(dto: MemberWelcomeCredentialsE
     </html>
   `;
 }
+
