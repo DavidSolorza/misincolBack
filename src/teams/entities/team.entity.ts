@@ -10,6 +10,7 @@ export type TeamHealthStatus = 'Optimo' | 'Atención' | 'Crítico';
 
 export class Team {
   id: string;
+  slug?: string;
   name: string;
   ethnicity?: string;
   region?: string;
@@ -19,6 +20,7 @@ export class Team {
   evangelicaCongregations: number;
   evangelicalsCount: number;
   leader?: string;
+  leaderEmail?: string;
   leaderPhone?: string;
   currentPhaseId?: string;
   totalBudget: number;

@@ -38,7 +38,7 @@ export class TeamsService implements OnModuleInit {
   }
 
   findOne(id: string): Team {
-    const found = this.teams.find((t) => t.id === id);
+    const found = this.teams.find((t) => t.id === id || (t.slug && t.slug === id));
     if (!found) throw new NotFoundException(`Equipo con ID '${id}' no encontrado.`);
     found.budgetPercentage = calculateExecutionPercentage(found.executedBudget, found.totalBudget);
     return found;
@@ -47,8 +47,10 @@ export class TeamsService implements OnModuleInit {
   create(dto: CreateTeamDto, createdBy?: string): Team {
     const totalBudget = Number(dto.totalBudget) || 0;
     const executedBudget = Number(dto.executedBudget) || 0;
+    const teamId = dto.id || (dto.slug ? dto.slug : `team-${Date.now()}`);
     const newTeam: Team = {
-      id: `team-${Date.now()}`,
+      id: teamId,
+      slug: dto.slug || teamId,
       ...dto,
       totalBudget,
       executedBudget,

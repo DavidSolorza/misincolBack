@@ -17,6 +17,14 @@ export class TeamMemberAccountDto {
 
 export class CreateTeamDto {
   @IsString()
+  @IsOptional()
+  id?: string;
+
+  @IsString()
+  @IsOptional()
+  slug?: string;
+
+  @IsString()
   @IsNotEmpty({ message: 'El nombre del equipo misionero es obligatorio' })
   name: string;
 

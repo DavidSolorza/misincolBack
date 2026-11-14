@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Delete, Body, Param, Req, UseGuards } from '@nestjs/common';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../common/enums/user-role.enum';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -45,6 +45,20 @@ export class TeamsController {
     return this.teamsService.create(dto, creator);
   }
 
+  @Put(':id')
+  @Roles(UserRole.ROLE_NACIONAL)
+  update(@Param('id') id: string, @Body() dto: Partial<CreateTeamDto>, @Req() req: any): Team {
+    const updater = req.user?.email || 'ROLE_NACIONAL';
+    return this.teamsService.update(id, dto, updater);
+  }
+
+  @Patch(':id')
+  @Roles(UserRole.ROLE_NACIONAL)
+  patch(@Param('id') id: string, @Body() dto: Partial<CreateTeamDto>, @Req() req: any): Team {
+    const updater = req.user?.email || 'ROLE_NACIONAL';
+    return this.teamsService.update(id, dto, updater);
+  }
+
   @Post(':id/members')
   addMember(@Param('id') id: string, @Body() memberDto: AddTeamMemberDto): TeamMember {
     return this.teamsService.addMember(id, memberDto);
@@ -56,3 +70,4 @@ export class TeamsController {
     return this.teamsService.delete(id);
   }
 }
+
