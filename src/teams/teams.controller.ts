@@ -49,14 +49,14 @@ export class TeamsController {
   @Roles(UserRole.ROLE_NACIONAL)
   update(@Param('id') id: string, @Body() dto: Partial<CreateTeamDto>, @Req() req: any): Team {
     const updater = req.user?.email || 'ROLE_NACIONAL';
-    return this.teamsService.update(id, dto, updater);
+    return this.teamsService.update(id, dto as any, updater);
   }
 
   @Patch(':id')
   @Roles(UserRole.ROLE_NACIONAL)
   patch(@Param('id') id: string, @Body() dto: Partial<CreateTeamDto>, @Req() req: any): Team {
     const updater = req.user?.email || 'ROLE_NACIONAL';
-    return this.teamsService.update(id, dto, updater);
+    return this.teamsService.update(id, dto as any, updater);
   }
 
   @Post(':id/members')
